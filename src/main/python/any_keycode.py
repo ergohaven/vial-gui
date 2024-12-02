@@ -4,7 +4,7 @@ import simpleeval
 import operator
 
 from keycodes.keycodes import KEYCODES_SPECIAL, KEYCODES_BASIC, KEYCODES_SHIFTED, KEYCODES_ISO, KEYCODES_BACKLIGHT, \
-    KEYCODES_MEDIA, KEYCODES_USER, Keycode
+    KEYCODES_MEDIA, KEYCODES_USER, Keycode, KEYCODES_UNICODE
 
 r = Keycode.resolve
 
@@ -103,7 +103,7 @@ class AnyKeycode:
 
     def prepare_names(self):
         for kc in KEYCODES_SPECIAL + KEYCODES_BASIC + KEYCODES_SHIFTED + KEYCODES_ISO + KEYCODES_BACKLIGHT + \
-                  KEYCODES_MEDIA + KEYCODES_USER:
+                  KEYCODES_MEDIA + KEYCODES_USER + KEYCODES_UNICODE:
             for qmk_id in kc.alias:
                 self.names[qmk_id] = Keycode.resolve(kc.qmk_id)
         macros = dict()
