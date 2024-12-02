@@ -6,7 +6,7 @@ import sys
 
 from keycodes.keycodes_v5 import keycodes_v5
 from keycodes.keycodes_v6 import keycodes_v6
-
+from keycodes.keycodes_unicode import UNICODE_DATA
 
 class Keycode:
 
@@ -513,6 +513,18 @@ KEYCODES_BACKLIGHT = [
     K("RGB_M_T", "RGB\nMode T", "RGB Mode: Test"),
 ]
 
+KEYCODES_UNICODE = [
+    K("UC_NEXT", "UC\nNext", "Switch to next Unicode mode"),
+    K("UC_PREV", "UC\nPrev", "Switch to previous Unicode mode"),
+    K("UC_MAC", "UC\nMacOS", "Switch to macOS Unicode mode"),
+    K("UC_LINX", "UC\nLinux", "Switch to Linux Unicode mode"),
+    K("UC_WIN", "UC\nWin", "Switch to Windows Unicode mode"),
+]
+
+for e in UNICODE_DATA:
+    k = K(e.qmk_id, e.label, e.tooltip)
+    KEYCODES_UNICODE.append(k)
+
 KEYCODES_MEDIA = [
     K("KC_F13", "F13"),
     K("KC_F14", "F14"),
@@ -779,7 +791,7 @@ def recreate_keycodes():
     KEYCODES.clear()
     KEYCODES.extend(KEYCODES_SPECIAL + KEYCODES_BASIC + KEYCODES_SHIFTED + KEYCODES_ISO + KEYCODES_LAYERS +
                     KEYCODES_BOOT + KEYCODES_MODIFIERS + KEYCODES_QUANTUM + KEYCODES_BACKLIGHT + KEYCODES_MEDIA +
-                    KEYCODES_TAP_DANCE + KEYCODES_MACRO + KEYCODES_USER + KEYCODES_HIDDEN + KEYCODES_MIDI)
+                    KEYCODES_TAP_DANCE + KEYCODES_MACRO + KEYCODES_USER + KEYCODES_HIDDEN + KEYCODES_MIDI + KEYCODES_UNICODE)
     KEYCODES_MAP.clear()
     RAWCODES_MAP.clear()
     for keycode in KEYCODES:

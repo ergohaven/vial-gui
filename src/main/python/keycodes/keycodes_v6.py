@@ -1,3 +1,5 @@
+from keycodes.keycodes_unicode import UNICODE_DATA
+
 class keycodes_v6:
     kc = {
         "QK_LAYER_TAP": 0x4000,
@@ -558,7 +560,16 @@ class keycodes_v6:
 
         "QMK_LM_SHIFT": 5,
         "QMK_LM_MASK": 0x1F,
+
+        "UC_NEXT": 0x7C30,
+        "UC_PREV": 0x7C31,
+        "UC_MAC": 0x7C32,
+        "UC_LINX": 0x7C33,
+        "UC_WIN": 0x7C34,
     }
+
+    for e in UNICODE_DATA:
+        kc[e.qmk_id] = ord(e.symbol) + 0x8000
 
     masked = set()
 
