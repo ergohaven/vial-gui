@@ -566,6 +566,7 @@ class keycodes_v6:
         "UC_MAC": 0x7C32,
         "UC_LINX": 0x7C33,
         "UC_WIN": 0x7C34,
+        "UC_WINC": 0x7C36,
     }
 
     for e in UNICODE_DATA:

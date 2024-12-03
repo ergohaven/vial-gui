@@ -519,6 +519,7 @@ KEYCODES_UNICODE = [
     K("UC_MAC", "UC\nMacOS", "Switch to macOS Unicode mode"),
     K("UC_LINX", "UC\nLinux", "Switch to Linux Unicode mode"),
     K("UC_WIN", "UC\nWin", "Switch to Windows Unicode mode"),
+    K("UC_WINC", "UC\nWinC", "Switch to Windows input using WinCompose Unicode mode"),
 ]
 
 for e in UNICODE_DATA:

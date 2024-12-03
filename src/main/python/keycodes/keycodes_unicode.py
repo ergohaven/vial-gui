@@ -2,10 +2,13 @@ import unicodedata
 from collections import namedtuple
 
 UNICODE_SYMBOLS = (
-    '«»—•'
-    '×±≠≈'
+    '«»„“§—–-•'
+    '×±≠≈‰'
     '°′″'
-    '®™©'
+    '✓'
+    '⌃⌥⇧⌘'
+    '₽€'
+    '®™©¢'
 )
 
 UnicodeEntry = namedtuple('UnicodeEntry',['symbol', 'qmk_id', 'label', 'tooltip'])
