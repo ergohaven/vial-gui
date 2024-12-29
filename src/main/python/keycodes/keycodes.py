@@ -119,6 +119,9 @@ class Keycode:
             inner = RAWCODES_MAP.get(code & 0x00FF)
             if outer is not None and inner is not None:
                 return outer.qmk_id.replace("kc", inner.qmk_id)
+        if 0x8000 < code < 0xFFFF:
+            sym = chr(code - 0x8000)
+            return f"UC\n{sym}"
         return hex(code)
 
     @classmethod
@@ -131,6 +134,11 @@ class Keycode:
             return val
         if val in cls.qmk_id_to_keycode:
             return cls.resolve(cls.qmk_id_to_keycode[val].qmk_id)
+        elif len(val) == 1 and ord(val) < 0x7FFF:
+            return 0x8000 + ord(val)
+        elif val.startswith('UC\n'):
+            val = val.lstrip('UC\n')
+            return 0x8000 + ord(val)
         anykc = AnyKeycode()
         try:
             return anykc.decode(val)
