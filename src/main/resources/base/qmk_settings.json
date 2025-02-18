@@ -76,6 +76,15 @@
                 { "type": "integer", "title": "Maximum number of scroll steps per scroll action", "qsid": 16, "min": 0, "max": 1000, "width": 2 },
                 { "type": "integer", "title": "Time until maximum scroll speed is reached", "qsid": 17, "min": 0, "max": 1000, "width": 2 }
             ]
+        },
+        {
+            "name": "Auto mouse",
+            "fields": [
+                { "type": "boolean", "title": "Enable auto mouse layer feature", "qsid": 30, "bit": 0 },
+                { "type": "integer", "title": "Layer", "qsid": 31, "min": 0, "max": 16, "width": 1 },
+                { "type": "integer", "title": "Timeout", "qsid": 32, "min": 100, "max": 2000, "width": 2 },
+                { "type": "integer", "title": "Debounce", "qsid": 33, "min": 0, "max": 255, "width": 1 }
+            ]
         }
     ]
 }
