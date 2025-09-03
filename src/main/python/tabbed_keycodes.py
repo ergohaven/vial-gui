@@ -48,6 +48,7 @@ class AlternativeDisplay(QWidget):
 
     def recreate_buttons(self, keycode_filter, keyboard=None):
         for btn in self.buttons:
+            btn.hide()
             btn.deleteLater()
         self.buttons = []
 
