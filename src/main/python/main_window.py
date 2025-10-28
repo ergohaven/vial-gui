@@ -31,7 +31,7 @@ from unlocker import Unlocker
 from util import tr, EXAMPLE_KEYBOARDS, KeycodeDisplay, EXAMPLE_KEYBOARD_PREFIX
 from vial_device import VialKeyboard
 from editor.matrix_test import MatrixTest
-
+from protocol.qmk_settings import ProtocolQmkSettings
 import themes
 
 
@@ -81,7 +81,7 @@ class MainWindow(QMainWindow):
         self.combos = Combos()
         self.key_override = KeyOverride()
         self.alt_repeat_key = AltRepeatKey()
-        QmkSettings.initialize(appctx)
+        ProtocolQmkSettings.initialize(appctx)
         self.qmk_settings = QmkSettings()
         self.matrix_tester = MatrixTest(self.layout_editor)
         self.rgb_configurator = RGBConfigurator()

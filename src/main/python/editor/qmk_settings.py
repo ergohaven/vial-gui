@@ -149,7 +149,7 @@ class QmkSettings(BasicEditor):
             self.tabs_widget.removeTab(0)
 
         # create new GUI
-        for tab in self.settings_defs["tabs"]:
+        for tab in self.qmk_settings.settings_defs["tabs"]:
             # don't bother creating tabs that would be empty - i.e. at least one qsid in a tab should be supported
             use_tab = False
             for field in tab["fields"]:
@@ -205,6 +205,7 @@ class QmkSettings(BasicEditor):
         super().rebuild(device)
         if self.valid():
             self.keyboard = device.keyboard
+            self.qmk_settings = self.keyboard.qmk_settings
             self.reload_settings()
 
     def prepare_settings(self):
@@ -231,41 +232,3 @@ class QmkSettings(BasicEditor):
         return isinstance(self.device, VialKeyboard) and \
                (self.device.keyboard and self.device.keyboard.vial_protocol >= VIAL_PROTOCOL_QMK_SETTINGS
                 and len(self.device.keyboard.supported_settings))
-
-    @classmethod
-    def initialize(cls, appctx):
-        cls.qsid_fields = defaultdict(list)
-        with open(appctx.get_resource("qmk_settings.json"), "r") as inf:
-            cls.settings_defs = json.load(inf)
-        for tab in cls.settings_defs["tabs"]:
-            for field in tab["fields"]:
-                cls.qsid_fields[field["qsid"]].append(field)
-
-    @classmethod
-    def is_qsid_supported(cls, qsid):
-        """ Return whether this qsid is supported by the settings editor """
-        return qsid in cls.qsid_fields
-
-    @classmethod
-    def qsid_serialize(cls, qsid, data):
-        """ Serialize from internal representation into binary that can be sent to the firmware """
-        fields = cls.qsid_fields[qsid]
-        if fields[0]["type"] == "boolean":
-            assert isinstance(data, int)
-            return data.to_bytes(fields[0].get("width", 1), byteorder="little")
-        elif fields[0]["type"] == "integer":
-            assert isinstance(data, int)
-            assert len(fields) == 1
-            return data.to_bytes(fields[0]["width"], byteorder="little")
-
-    @classmethod
-    def qsid_deserialize(cls, qsid, data):
-        """ Deserialize from binary received from firmware into internal representation """
-        fields = cls.qsid_fields[qsid]
-        if fields[0]["type"] == "boolean":
-            return int.from_bytes(data[0:fields[0].get("width", 1)], byteorder="little")
-        elif fields[0]["type"] == "integer":
-            assert len(fields) == 1
-            return int.from_bytes(data[0:fields[0]["width"]], byteorder="little")
-        else:
-            raise RuntimeError("unsupported field")
