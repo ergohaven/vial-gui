@@ -35,6 +35,10 @@ class ProtocolQmkSettings:
             assert isinstance(data, int)
             assert len(fields) == 1
             return data.to_bytes(fields[0]["width"], byteorder="little")
+        elif fields[0]["type"] == "select":
+            assert isinstance(data, int)
+            assert len(fields) == 1
+            return data.to_bytes(fields[0].get("width", 1), byteorder="little")
 
     def qsid_deserialize(self, qsid, data):
         """ Deserialize from binary received from firmware into internal representation """
@@ -45,6 +49,10 @@ class ProtocolQmkSettings:
         elif fields[0]["type"] == "integer":
             assert len(fields) == 1
             return int.from_bytes(data[0:fields[0]["width"]],
+                                  byteorder="little")
+        elif fields[0]["type"] == "select":
+            assert len(fields) == 1
+            return int.from_bytes(data[0:fields[0].get("width", 1)],
                                   byteorder="little")
         else:
             raise RuntimeError("unsupported field")

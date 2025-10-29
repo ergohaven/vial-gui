@@ -1,10 +1,9 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-import json
 from collections import defaultdict
 
 from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSignal, QObject
-from PyQt5.QtWidgets import QVBoxLayout, QCheckBox, QGridLayout, QLabel, QWidget, QSizePolicy, QTabWidget, QSpinBox, \
+from PyQt5.QtWidgets import QVBoxLayout, QCheckBox, QComboBox, QGridLayout, QLabel, QWidget, QSizePolicy, QTabWidget, QSpinBox, \
     QHBoxLayout, QPushButton, QMessageBox
 
 from editor.basic_editor import BasicEditor
@@ -94,6 +93,31 @@ class IntegerOption(GenericOption):
         self.spinbox.deleteLater()
 
 
+class SelectOption(GenericOption):
+
+    def __init__(self, option, container):
+        super().__init__(option, container)
+
+        self.combobox = QComboBox()
+        self.combobox.addItems(option["variants"])
+        self.combobox.currentIndexChanged.connect(self.on_change)
+        self.container.addWidget(self.combobox, self.row, 1)
+
+    def reload(self, keyboard):
+        value = super().reload(keyboard)
+        self.combobox.blockSignals(True)
+        self.combobox.setCurrentIndex(value)
+        self.combobox.blockSignals(False)
+
+    def value(self):
+        return self.combobox.currentIndex()
+
+    def delete(self):
+        super().delete()
+        self.combobox.hide()
+        self.combobox.deleteLater()
+
+
 class QmkSettings(BasicEditor):
 
     def __init__(self):
@@ -129,6 +153,10 @@ class QmkSettings(BasicEditor):
                 opt.changed.connect(self.on_change)
             elif field["type"] == "integer":
                 opt = IntegerOption(field, container)
+                options.append(opt)
+                opt.changed.connect(self.on_change)
+            elif field["type"] == "select":
+                opt = SelectOption(field, container)
                 options.append(opt)
                 opt.changed.connect(self.on_change)
             else:
