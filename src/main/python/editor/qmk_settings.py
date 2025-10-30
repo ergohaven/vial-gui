@@ -1,15 +1,17 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 from collections import defaultdict
 
-from PyQt5 import QtCore
-from PyQt5.QtCore import pyqtSignal, QObject
-from PyQt5.QtWidgets import QVBoxLayout, QCheckBox, QComboBox, QGridLayout, QLabel, QWidget, QSizePolicy, QTabWidget, QSpinBox, \
-    QHBoxLayout, QPushButton, QMessageBox
-
 from editor.basic_editor import BasicEditor
 from protocol.constants import VIAL_PROTOCOL_QMK_SETTINGS
-from util import tr
+from PyQt5 import QtCore
+from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtWidgets import (QCheckBox, QComboBox, QGridLayout, QHBoxLayout,
+                             QLabel, QLineEdit, QMessageBox, QPushButton,
+                             QSizePolicy, QSpinBox, QTabWidget, QVBoxLayout,
+                             QWidget)
 from vial_device import VialKeyboard
+
+from util import tr
 
 
 class GenericOption(QObject):
@@ -118,6 +120,31 @@ class SelectOption(GenericOption):
         self.combobox.deleteLater()
 
 
+class StringOption(GenericOption):
+
+    def __init__(self, option, container):
+        super().__init__(option, container)
+
+        self.editor = QLineEdit()
+        self.editor.textChanged.connect(self.on_change)
+        self.container.addWidget(self.editor, self.row, 1)
+
+    def reload(self, keyboard):
+        value = super().reload(keyboard)
+        self.editor.blockSignals(True)
+        self.editor.setText(value)
+        self.editor.blockSignals(False)
+
+    def value(self):
+        return self.editor.text()
+        return 0
+
+    def delete(self):
+        super().delete()
+        self.editor.hide()
+        self.editor.deleteLater()
+
+
 class QmkSettings(BasicEditor):
 
     def __init__(self):
@@ -149,18 +176,16 @@ class QmkSettings(BasicEditor):
                 continue
             if field["type"] == "boolean":
                 opt = BooleanOption(field, container)
-                options.append(opt)
-                opt.changed.connect(self.on_change)
             elif field["type"] == "integer":
                 opt = IntegerOption(field, container)
-                options.append(opt)
-                opt.changed.connect(self.on_change)
             elif field["type"] == "select":
                 opt = SelectOption(field, container)
-                options.append(opt)
-                opt.changed.connect(self.on_change)
+            elif field["type"] == "string":
+                opt = StringOption(field, container)
             else:
                 raise RuntimeError("unsupported field type: {}".format(field))
+            options.append(opt)
+            opt.changed.connect(self.on_change)
         return options
 
     def recreate_gui(self):
@@ -240,19 +265,28 @@ class QmkSettings(BasicEditor):
         qsid_values = defaultdict(int)
         for tab in self.tabs:
             for field in tab:
-                qsid_values[field.qsid] |= field.value()
+                value = field.value()
+                if isinstance(value, str):
+                    qsid_values[field.qsid] = value
+                elif isinstance(value, int):
+                    qsid_values[field.qsid] |= value
+                else:
+                    raise RuntimeError("unsupported value type")
+
         return qsid_values
 
     def save_settings(self):
         qsid_values = self.prepare_settings()
         for qsid, value in qsid_values.items():
-            self.keyboard.qmk_settings_set(qsid, value)
+            if value != self.keyboard.settings[qsid]:
+                self.keyboard.qmk_settings_set(qsid, value)
         self.on_change()
 
     def reset_settings(self):
-        if QMessageBox.question(self.widget(), "",
-                                tr("QmkSettings", "Reset all settings to default values?"),
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.Yes:
+        if QMessageBox.question(
+                self.widget(), "",
+                tr("QmkSettings", "Reset all settings to default values?"),
+                QMessageBox.Yes | QMessageBox.No) == QMessageBox.Yes:
             self.keyboard.qmk_settings_reset()
             self.reload_settings()
 
