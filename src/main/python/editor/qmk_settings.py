@@ -137,7 +137,6 @@ class StringOption(GenericOption):
 
     def value(self):
         return self.editor.text()
-        return 0
 
     def delete(self):
         super().delete()
@@ -150,6 +149,7 @@ class QmkSettings(BasicEditor):
     def __init__(self):
         super().__init__()
         self.keyboard = None
+        self.settings_set = set()
 
         self.tabs_widget = QTabWidget()
         self.addWidget(self.tabs_widget)
@@ -172,7 +172,7 @@ class QmkSettings(BasicEditor):
     def populate_tab(self, tab, container):
         options = []
         for field in tab["fields"]:
-            if field["qsid"] not in self.keyboard.supported_settings:
+            if field["qsid"] not in self.settings_set:
                 continue
             if field["type"] == "boolean":
                 opt = BooleanOption(field, container)
@@ -206,7 +206,7 @@ class QmkSettings(BasicEditor):
             # don't bother creating tabs that would be empty - i.e. at least one qsid in a tab should be supported
             use_tab = False
             for field in tab["fields"]:
-                if field["qsid"] in self.keyboard.supported_settings:
+                if field["qsid"] in self.settings_set:
                     use_tab = True
                     break
             if not use_tab:
@@ -258,6 +258,7 @@ class QmkSettings(BasicEditor):
         super().rebuild(device)
         if self.valid():
             self.keyboard = device.keyboard
+            self.settings_set = self.keyboard.qmk_supported_settings
             self.qmk_settings = self.keyboard.qmk_settings
             self.reload_settings()
 

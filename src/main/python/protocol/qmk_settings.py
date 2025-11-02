@@ -7,10 +7,13 @@ class ProtocolQmkSettings:
     def __init__(self, settings):
         self.settings_defs = deepcopy(ProtocolQmkSettings._settings_defs)
         self.qsid_fields = deepcopy(ProtocolQmkSettings._qsid_fields)
+        self.kbd_settings_set = set()
+        self.qmk_settings_set = set(self.qsid_fields.keys())
         for tab in settings:
             self.settings_defs["tabs"].append(tab)
             for field in tab["fields"]:
                 self.qsid_fields[field["qsid"]].append(field)
+                self.kbd_settings_set.add(field["qsid"])
 
     @classmethod
     def initialize(cls, appctx):

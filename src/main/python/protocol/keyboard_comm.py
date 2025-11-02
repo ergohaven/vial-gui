@@ -302,6 +302,9 @@ class Keyboard(ProtocolMacro, ProtocolDynamic, ProtocolTapDance, ProtocolCombo, 
                 if qsid != 0xFFFF:
                     self.supported_settings.add(qsid)
 
+        self.kbd_supported_settings = self.qmk_settings.kbd_settings_set & self.supported_settings
+        self.qmk_supported_settings = self.qmk_settings.qmk_settings_set & self.supported_settings
+
         for qsid in self.supported_settings:
             if not self.qmk_settings.is_qsid_supported(qsid):
                 continue
@@ -405,7 +408,7 @@ class Keyboard(ProtocolMacro, ProtocolDynamic, ProtocolTapDance, ProtocolCombo, 
         data["alt_repeat_key"] = self.save_alt_repeat_key()
         data["settings"] = self.settings
 
-        return json.dumps(data).encode("utf-8")
+        return json.dumps(data, ensure_ascii=False).encode("utf-8")
 
     def restore_layout(self, data):
         """ Restores saved layout """
