@@ -288,7 +288,7 @@ class Keyboard(ProtocolMacro, ProtocolDynamic, ProtocolTapDance, ProtocolCombo, 
     def reload_settings(self):
         self.settings = dict()
         self.supported_settings = set()
-        self.qmk_settings = ProtocolQmkSettings(self.definition["settings"])
+        self.qmk_settings = ProtocolQmkSettings(self.definition.get("settings", None))
 
         if self.vial_protocol < VIAL_PROTOCOL_QMK_SETTINGS:
             return
