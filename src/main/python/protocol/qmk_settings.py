@@ -64,6 +64,6 @@ class ProtocolQmkSettings:
             return int.from_bytes(data[0:width], byteorder="little")
         elif fields[0]["type"] == "string":
             assert len(fields) == 1
-            return data[0:width].decode('utf-8').strip('\x00')
+            return data[0:width].decode('utf-8', errors='ignore').strip('\x00')
         else:
             raise RuntimeError("unsupported field")
