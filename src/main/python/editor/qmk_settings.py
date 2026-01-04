@@ -1,16 +1,17 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-import json
 from collections import defaultdict
-
-from PyQt5 import QtCore
-from PyQt5.QtCore import pyqtSignal, QObject
-from PyQt5.QtWidgets import QVBoxLayout, QCheckBox, QGridLayout, QLabel, QWidget, QSizePolicy, QTabWidget, QSpinBox, \
-    QHBoxLayout, QPushButton, QMessageBox
 
 from editor.basic_editor import BasicEditor
 from protocol.constants import VIAL_PROTOCOL_QMK_SETTINGS
-from util import tr
+from PyQt5 import QtCore
+from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtWidgets import (QCheckBox, QComboBox, QGridLayout, QHBoxLayout,
+                             QLabel, QLineEdit, QMessageBox, QPushButton,
+                             QSizePolicy, QSpinBox, QTabWidget, QVBoxLayout,
+                             QWidget)
 from vial_device import VialKeyboard
+
+from util import tr
 
 
 class GenericOption(QObject):
@@ -94,11 +95,61 @@ class IntegerOption(GenericOption):
         self.spinbox.deleteLater()
 
 
+class SelectOption(GenericOption):
+
+    def __init__(self, option, container):
+        super().__init__(option, container)
+
+        self.combobox = QComboBox()
+        self.combobox.addItems(option["variants"])
+        self.combobox.currentIndexChanged.connect(self.on_change)
+        self.container.addWidget(self.combobox, self.row, 1)
+
+    def reload(self, keyboard):
+        value = super().reload(keyboard)
+        self.combobox.blockSignals(True)
+        self.combobox.setCurrentIndex(value)
+        self.combobox.blockSignals(False)
+
+    def value(self):
+        return self.combobox.currentIndex()
+
+    def delete(self):
+        super().delete()
+        self.combobox.hide()
+        self.combobox.deleteLater()
+
+
+class StringOption(GenericOption):
+
+    def __init__(self, option, container):
+        super().__init__(option, container)
+
+        self.editor = QLineEdit()
+        self.editor.textChanged.connect(self.on_change)
+        self.container.addWidget(self.editor, self.row, 1)
+
+    def reload(self, keyboard):
+        value = super().reload(keyboard)
+        self.editor.blockSignals(True)
+        self.editor.setText(value)
+        self.editor.blockSignals(False)
+
+    def value(self):
+        return self.editor.text()
+
+    def delete(self):
+        super().delete()
+        self.editor.hide()
+        self.editor.deleteLater()
+
+
 class QmkSettings(BasicEditor):
 
     def __init__(self):
         super().__init__()
         self.keyboard = None
+        self.settings_set = set()
 
         self.tabs_widget = QTabWidget()
         self.addWidget(self.tabs_widget)
@@ -121,18 +172,20 @@ class QmkSettings(BasicEditor):
     def populate_tab(self, tab, container):
         options = []
         for field in tab["fields"]:
-            if field["qsid"] not in self.keyboard.supported_settings:
+            if field["qsid"] not in self.settings_set:
                 continue
             if field["type"] == "boolean":
                 opt = BooleanOption(field, container)
-                options.append(opt)
-                opt.changed.connect(self.on_change)
             elif field["type"] == "integer":
                 opt = IntegerOption(field, container)
-                options.append(opt)
-                opt.changed.connect(self.on_change)
+            elif field["type"] == "select":
+                opt = SelectOption(field, container)
+            elif field["type"] == "string":
+                opt = StringOption(field, container)
             else:
                 raise RuntimeError("unsupported field type: {}".format(field))
+            options.append(opt)
+            opt.changed.connect(self.on_change)
         return options
 
     def recreate_gui(self):
@@ -149,11 +202,11 @@ class QmkSettings(BasicEditor):
             self.tabs_widget.removeTab(0)
 
         # create new GUI
-        for tab in self.settings_defs["tabs"]:
+        for tab in self.qmk_settings.settings_defs["tabs"]:
             # don't bother creating tabs that would be empty - i.e. at least one qsid in a tab should be supported
             use_tab = False
             for field in tab["fields"]:
-                if field["qsid"] in self.keyboard.supported_settings:
+                if field["qsid"] in self.settings_set:
                     use_tab = True
                     break
             if not use_tab:
@@ -205,25 +258,36 @@ class QmkSettings(BasicEditor):
         super().rebuild(device)
         if self.valid():
             self.keyboard = device.keyboard
+            self.settings_set = self.keyboard.qmk_supported_settings
+            self.qmk_settings = self.keyboard.qmk_settings
             self.reload_settings()
 
     def prepare_settings(self):
         qsid_values = defaultdict(int)
         for tab in self.tabs:
             for field in tab:
-                qsid_values[field.qsid] |= field.value()
+                value = field.value()
+                if isinstance(value, str):
+                    qsid_values[field.qsid] = value
+                elif isinstance(value, int):
+                    qsid_values[field.qsid] |= value
+                else:
+                    raise RuntimeError("unsupported value type")
+
         return qsid_values
 
     def save_settings(self):
         qsid_values = self.prepare_settings()
         for qsid, value in qsid_values.items():
-            self.keyboard.qmk_settings_set(qsid, value)
+            if value != self.keyboard.settings[qsid]:
+                self.keyboard.qmk_settings_set(qsid, value)
         self.on_change()
 
     def reset_settings(self):
-        if QMessageBox.question(self.widget(), "",
-                                tr("QmkSettings", "Reset all settings to default values?"),
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.Yes:
+        if QMessageBox.question(
+                self.widget(), "",
+                tr("QmkSettings", "Reset all settings to default values?"),
+                QMessageBox.Yes | QMessageBox.No) == QMessageBox.Yes:
             self.keyboard.qmk_settings_reset()
             self.reload_settings()
 
@@ -231,41 +295,3 @@ class QmkSettings(BasicEditor):
         return isinstance(self.device, VialKeyboard) and \
                (self.device.keyboard and self.device.keyboard.vial_protocol >= VIAL_PROTOCOL_QMK_SETTINGS
                 and len(self.device.keyboard.supported_settings))
-
-    @classmethod
-    def initialize(cls, appctx):
-        cls.qsid_fields = defaultdict(list)
-        with open(appctx.get_resource("qmk_settings.json"), "r") as inf:
-            cls.settings_defs = json.load(inf)
-        for tab in cls.settings_defs["tabs"]:
-            for field in tab["fields"]:
-                cls.qsid_fields[field["qsid"]].append(field)
-
-    @classmethod
-    def is_qsid_supported(cls, qsid):
-        """ Return whether this qsid is supported by the settings editor """
-        return qsid in cls.qsid_fields
-
-    @classmethod
-    def qsid_serialize(cls, qsid, data):
-        """ Serialize from internal representation into binary that can be sent to the firmware """
-        fields = cls.qsid_fields[qsid]
-        if fields[0]["type"] == "boolean":
-            assert isinstance(data, int)
-            return data.to_bytes(fields[0].get("width", 1), byteorder="little")
-        elif fields[0]["type"] == "integer":
-            assert isinstance(data, int)
-            assert len(fields) == 1
-            return data.to_bytes(fields[0]["width"], byteorder="little")
-
-    @classmethod
-    def qsid_deserialize(cls, qsid, data):
-        """ Deserialize from binary received from firmware into internal representation """
-        fields = cls.qsid_fields[qsid]
-        if fields[0]["type"] == "boolean":
-            return int.from_bytes(data[0:fields[0].get("width", 1)], byteorder="little")
-        elif fields[0]["type"] == "integer":
-            assert len(fields) == 1
-            return int.from_bytes(data[0:fields[0]["width"]], byteorder="little")
-        else:
-            raise RuntimeError("unsupported field")

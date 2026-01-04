@@ -41,6 +41,8 @@ class keycodes_v5:
         "LALT(kc)": 0x400,
         "LCA_T(kc)": 0x6500,
         "LCA(kc)": 0x500,
+        "LAG_T(kc)": 0x6c00,
+        "LAG(kc)": 0xc00,
         "LCAG_T(kc)": 0x6d00,
         "LCAG(kc)": 0xd00,
         "LCG_T(kc)": 0x6900,
@@ -591,6 +593,8 @@ class keycodes_v5:
         "UC_LINX": 0x7C33,
         "UC_WIN": 0x7C34,
         "UC_WINC": 0x7C36,
+
+        "MAGIC_TOGGLE_GUI": 0x999c2,
     }
 
     for e in UNICODE_DATA:
