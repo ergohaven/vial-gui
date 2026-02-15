@@ -8,12 +8,13 @@ class KbdSettings(QmkSettings):
 
     def rebuild(self, device):
         super(QmkSettings, self).rebuild(device)
-        self.keyboard = device.keyboard
-        if self.keyboard:
-            self.qmk_settings = self.keyboard.qmk_settings
-            self.settings_set = self.keyboard.qmk_settings.kbd_settings_set
-            if self.valid():
-                self.reload_settings()
+        if device:
+            self.keyboard = device.keyboard
+            if self.keyboard:
+                self.qmk_settings = self.keyboard.qmk_settings
+                self.settings_set = self.keyboard.qmk_settings.kbd_settings_set
+                if self.valid():
+                    self.reload_settings()
 
     def valid(self):
         return (isinstance(self.device, VialKeyboard) and
