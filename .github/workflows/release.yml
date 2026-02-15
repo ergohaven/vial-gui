@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+
+  build:
+    uses: ./.github/workflows/main.yml
+
+  release:
+    name: Release
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'write'
+      packages: 'write'
+      pull-requests: 'read'
+
+    steps:
+      - name: Download
+        uses: actions/download-artifact@v5
+        with:
+          pattern: vial-*
+          path: vial
+
+      - run: ls -R vial
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: false
+          files: |
+            vial/vial-linux/Vial-x86_64.AppImage
+            vial/vial-mac/vial-mac.dmg
+            vial/vial-win/vial-win.zip
+            vial/vial-win-installer/VialSetup.exe
