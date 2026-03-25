@@ -1,0 +1,52 @@
+name: Release Ergohaven
+
+on:
+  push:
+    branches:
+      - ergohaven-i18n
+    tags:
+      - "ergohaven-*"
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: ./.github/workflows/main.yml
+
+  release:
+    name: Release
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'write'
+      packages: 'write'
+      pull-requests: 'read'
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: vial-*
+          path: vial
+
+      - run: ls -R vial
+
+      - name: Get short SHA
+        id: vars
+        run: echo "sha=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+
+      - name: Create or update rolling release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ergohaven-latest
+          name: "Ergohaven Build (latest)"
+          draft: false
+          prerelease: true
+          body: |
+            Automated build from branch `ergohaven-i18n`.
+            Commit: ${{ github.sha }}
+          files: |
+            vial/vial-linux/Vial-x86_64.AppImage
+            vial/vial-mac/vial-mac.dmg
+            vial/vial-win/vial-win.zip
+            vial/vial-win-installer/VialSetup.exe
