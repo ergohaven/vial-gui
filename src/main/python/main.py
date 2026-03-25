@@ -77,8 +77,6 @@ if __name__ == '__main__':
         linux_keystroke_recorder()
     else:
         appctxt = VialApplicationContext()       # 1. Instantiate ApplicationContext
-        from i18n import install_translator
-        install_translator(appctxt.app)
         init_logger()
         qt_exception_hook = UncaughtHook()
         window = MainWindow(appctxt)
