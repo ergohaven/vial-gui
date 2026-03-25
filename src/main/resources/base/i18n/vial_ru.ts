@@ -140,6 +140,10 @@
         <source>About</source>
         <translation>О программе</translation>
     </message>
+    <message>
+        <source>Language</source>
+        <translation>Язык</translation>
+    </message>
 </context>
 <context>
     <name>MenuAbout</name>

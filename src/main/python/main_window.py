@@ -243,6 +243,22 @@ class MainWindow(QMainWindow):
         self.about_menu.addAction(self.about_keyboard_act)
         self.about_menu.addAction(about_vial_act)
 
+        # Language menu
+        from i18n import get_available_languages, get_saved_language
+        self.language_menu = self.menuBar().addMenu(tr("Menu", "Language"))
+        language_group = QActionGroup(self)
+        current_lang = get_saved_language()
+        for code, name in get_available_languages():
+            act = QAction(name, self)
+            act.setCheckable(True)
+            act.setChecked(current_lang == code)
+            act.triggered.connect(lambda checked, c=code: self._on_language_changed(c))
+            language_group.addAction(act)
+            self.language_menu.addAction(act)
+        # if nothing checked, check first (English)
+        if language_group.checkedAction() is None:
+            language_group.actions()[0].setChecked(True)
+
     def on_layout_loaded(self, layout):
         """
         Receives a message from the JS bridge when a layout has
@@ -423,6 +439,14 @@ class MainWindow(QMainWindow):
         self.settings.setValue("theme", theme)
         msg = QMessageBox()
         msg.setText(tr("MainWindow", "In order to fully apply the theme you should restart the application."))
+        msg.exec_()
+
+    def _on_language_changed(self, locale_code):
+        from i18n import save_language
+        save_language(locale_code)
+        msg = QMessageBox()
+        msg.setWindowTitle("Language / Язык")
+        msg.setText("Please restart the application to apply the new language.\n\nПерезапустите приложение для применения нового языка.")
         msg.exec_()
 
     def on_tab_changed(self, index):
