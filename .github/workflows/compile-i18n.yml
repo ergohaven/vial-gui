@@ -1,0 +1,35 @@
+name: Compile i18n
+
+on:
+  push:
+    branches:
+      - ergohaven-i18n
+    paths:
+      - 'src/main/resources/base/i18n/**.ts'
+  workflow_dispatch:
+
+jobs:
+  compile-translations:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Qt tools
+      run: sudo apt-get install -y qttools5-dev-tools
+
+    - name: Compile translations
+      run: |
+        lrelease src/main/resources/base/i18n/vial_ru.ts \
+          -qm src/main/resources/base/i18n/vial_ru.qm
+        ls -lah src/main/resources/base/i18n/
+
+    - name: Commit compiled .qm
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add src/main/resources/base/i18n/vial_ru.qm
+        git diff --cached --quiet || git commit -m "ci: compile vial_ru.qm [skip ci]"
+        git push
