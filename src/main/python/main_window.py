@@ -346,7 +346,7 @@ class MainWindow(QMainWindow):
 
         self.about_keyboard_act.setVisible(False)
         if isinstance(self.autorefresh.current_device, VialKeyboard):
-            self.about_keyboard_act.setText("About {}...".format(self.autorefresh.current_device.title()))
+            self.about_keyboard_act.setText(tr("MainWindow", "About {}...").format(self.autorefresh.current_device.title()))
             self.about_keyboard_act.setVisible(True)
 
         # if unlock process was interrupted, we must finish it first

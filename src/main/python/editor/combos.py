@@ -4,6 +4,7 @@ from PyQt5.QtCore import pyqtSignal, QObject
 from PyQt5.QtWidgets import QWidget, QSizePolicy, QGridLayout, QVBoxLayout, QLabel
 
 from protocol.constants import VIAL_PROTOCOL_DYNAMIC
+from util import tr
 from widgets.key_widget import KeyWidget
 from vial_device import VialKeyboard
 from editor.basic_editor import BasicEditor
@@ -35,13 +36,13 @@ class ComboEntryUI(QObject):
         for x in range(4):
             kc_widget = KeyWidget()
             kc_widget.changed.connect(self.on_key_changed)
-            self.container.addWidget(QLabel("Key {}".format(x + 1)), x, 0)
+            self.container.addWidget(QLabel(tr("Combos", "Key {}").format(x + 1)), x, 0)
             self.container.addWidget(kc_widget, x, 1)
             self.kc_inputs.append(kc_widget)
 
         self.kc_output = KeyWidget()
         self.kc_output.changed.connect(self.on_key_changed)
-        self.container.addWidget(QLabel("Output key"), 4, 0)
+        self.container.addWidget(QLabel(tr("Combos", "Output key")), 4, 0)
         self.container.addWidget(self.kc_output, 4, 1)
 
     def widget(self):
