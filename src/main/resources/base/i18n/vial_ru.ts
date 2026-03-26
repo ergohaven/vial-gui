@@ -769,5 +769,57 @@
         <translation>Юникод</translation>
     </message>
 </context>
+
+<context>
+    <name>LayoutLabel</name>
+    <message>
+        <source>Hide encoder L1</source>
+        <translation>Скрыть энкодер L1</translation>
+    </message>
+    <message>
+        <source>Hide encoder L2</source>
+        <translation>Скрыть энкодер L2</translation>
+    </message>
+    <message>
+        <source>Hide encoder L3</source>
+        <translation>Скрыть энкодер L3</translation>
+    </message>
+    <message>
+        <source>Hide encoder R1</source>
+        <translation>Скрыть энкодер R1</translation>
+    </message>
+    <message>
+        <source>Hide encoder R2</source>
+        <translation>Скрыть энкодер R2</translation>
+    </message>
+    <message>
+        <source>Hide encoder R3</source>
+        <translation>Скрыть энкодер R3</translation>
+    </message>
+    <message>
+        <source>OLED Master</source>
+        <translation>OLED мастер</translation>
+    </message>
+    <message>
+        <source>OLED Slave</source>
+        <translation>OLED слейв</translation>
+    </message>
+    <message>
+        <source>Status (minimalistic)</source>
+        <translation>Статус (минималистичный)</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Статус</translation>
+    </message>
+    <message>
+        <source>WPM</source>
+        <translation>WPM</translation>
+    </message>
+    <message>
+        <source>Luna</source>
+        <translation>Луна</translation>
+    </message>
+</context>
 </TS>
 
