@@ -26,7 +26,7 @@ class GenericOption(QObject):
         self.qsid = self.option["qsid"]
         self.container = container
 
-        self.lbl = QLabel(option["title"])
+        self.lbl = QLabel(tr("QmkSettingsField", option["title"]))
         self.container.addWidget(self.lbl, self.row, 0)
 
     def reload(self, keyboard):
@@ -222,7 +222,7 @@ class QmkSettings(BasicEditor):
             w2 = QWidget()
             w2.setLayout(l)
             self.misc_widgets += [w, w2]
-            self.tabs_widget.addTab(w2, tab["name"])
+            self.tabs_widget.addTab(w2, tr("QmkSettingsTab", tab["name"]))
             self.tabs.append(self.populate_tab(tab, container))
 
     def reload_settings(self):
