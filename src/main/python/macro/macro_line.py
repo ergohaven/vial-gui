@@ -12,7 +12,7 @@ class MacroLine(QObject):
 
     changed = pyqtSignal()
 
-    types = [tr("MacroLine", "Text"), tr("MacroLine", "Down"), tr("MacroLine", "Up"), tr("MacroLine", "Tap")]
+    types_keys = ["Text", "Down", "Up", "Tap"]
     type_to_cls = [ActionTextUI, ActionDownUI, ActionUpUI, ActionTapUI]
 
     def __init__(self, parent, action):
@@ -21,9 +21,12 @@ class MacroLine(QObject):
         self.parent = parent
         self.container = parent.container
 
+        self.types_keys = self.types_keys[:]
+        self.type_to_cls = self.type_to_cls[:]
         if self.parent.parent.keyboard.vial_protocol >= VIAL_PROTOCOL_ADVANCED_MACROS:
-            self.types = self.types[:] + [tr("MacroLine", "Delay (ms)")]
-            self.type_to_cls = self.type_to_cls[:] + [ActionDelayUI]
+            self.types_keys = self.types_keys + ["Delay (ms)"]
+            self.type_to_cls = self.type_to_cls + [ActionDelayUI]
+        self.types = [tr("MacroLine", k) for k in self.types_keys]
 
         self.arrows = QHBoxLayout()
         self.btn_up = QToolButton()
@@ -40,7 +43,7 @@ class MacroLine(QObject):
         self.arrows.setSpacing(0)
 
         self.select_type = QComboBox()
-        self.select_type.addItems(self.types)
+        self.select_type.addItems([tr("MacroLine", k) for k in self.types_keys])
         self.select_type.setCurrentIndex(self.type_to_cls.index(type(action)))
         self.select_type.currentIndexChanged.connect(self.on_change_type)
 
@@ -52,6 +55,14 @@ class MacroLine(QObject):
         self.btn_remove.setText("×")
         self.btn_remove.setToolButtonStyle(Qt.ToolButtonTextOnly)
         self.btn_remove.clicked.connect(self.on_remove_clicked)
+
+    def retranslateUi(self):
+        current_idx = self.select_type.currentIndex()
+        self.select_type.blockSignals(True)
+        self.select_type.clear()
+        self.select_type.addItems([tr("MacroLine", k) for k in self.types_keys])
+        self.select_type.setCurrentIndex(current_idx)
+        self.select_type.blockSignals(False)
 
     def insert(self, row):
         self.row = row
