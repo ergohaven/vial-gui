@@ -368,6 +368,22 @@ class MainWindow(QMainWindow):
             c = EditorContainer(container)
             self.tabs.addTab(c, tr("MainWindow", lbl))
 
+    def retranslateUi(self):
+        self.btn_refresh_devices.setText(tr("MainWindow", "Refresh"))
+        for i in range(self.tabs.count()):
+            w = self.tabs.widget(i)
+            if hasattr(w, 'editor'):
+                for editor, lbl in self.editors:
+                    if w.editor is editor:
+                        self.tabs.setTabText(i, tr("MainWindow", lbl))
+                        break
+
+    def changeEvent(self, event):
+        from PyQt5.QtCore import QEvent
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi()
+        super().changeEvent(event)
+
     def load_via_stack_json(self):
         from urllib.request import urlopen
 
@@ -442,12 +458,10 @@ class MainWindow(QMainWindow):
         msg.exec_()
 
     def _on_language_changed(self, locale_code):
-        from i18n import save_language
-        save_language(locale_code)
-        msg = QMessageBox()
-        msg.setWindowTitle("Language / Язык")
-        msg.setText("Please restart the application to apply the new language.\n\nПерезапустите приложение для применения нового языка.")
-        msg.exec_()
+        from PyQt5.QtWidgets import QApplication
+        from i18n import switch_language
+        switch_language(QApplication.instance(), locale_code)
+        # Qt automatically sends LanguageChange event to all top-level widgets
 
     def on_tab_changed(self, index):
         TabbedKeycodes.close_tray()
