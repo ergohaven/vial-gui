@@ -22,8 +22,8 @@ class MatrixTest(BasicEditor):
         self.keyboardWidget = KeyboardWidget(layout_editor)
         self.keyboardWidget.set_enabled(False)
 
-        self.unlock_btn = QPushButton(tr("MatrixTest", "Unlock"))
-        self.reset_btn = QPushButton(tr("MatrixTest", "Reset"))
+        self.unlock_btn = QPushButton()
+        self.reset_btn = QPushButton()
 
         layout = QVBoxLayout()
         layout.addWidget(self.keyboardWidget)
@@ -33,7 +33,7 @@ class MatrixTest(BasicEditor):
 
         btn_layout = QHBoxLayout()
         btn_layout.addStretch()
-        self.unlock_lbl = QLabel(tr("MatrixTest", "Unlock the keyboard before testing:"))
+        self.unlock_lbl = QLabel()
         btn_layout.addWidget(self.unlock_lbl)
         btn_layout.addWidget(self.unlock_btn)
         btn_layout.addWidget(self.reset_btn)
@@ -50,6 +50,19 @@ class MatrixTest(BasicEditor):
         self.reset_btn.clicked.connect(self.reset_keyboard_widget)
 
         self.grabber = QWidget()
+
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.unlock_btn.setText(tr("MatrixTest", "Unlock"))
+        self.reset_btn.setText(tr("MatrixTest", "Reset"))
+        self.unlock_lbl.setText(tr("MatrixTest", "Unlock the keyboard before testing:"))
+
+    def changeEvent(self, event):
+        from PyQt5.QtCore import QEvent
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi()
+        super().changeEvent(event)
 
     def rebuild(self, device):
         super().rebuild(device)
