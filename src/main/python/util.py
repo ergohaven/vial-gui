@@ -14,7 +14,101 @@ from hidproxy import hid
 from keycodes.keycodes import Keycode
 from keymaps import KEYMAPS
 
-tr = QCoreApplication.translate
+# SPDX-License-Identifier: GPL-2.0-or-later
+# Ergohaven Russian localization
+_TRANSLATIONS = {
+    # Main window tabs
+    "Keymap": "Раскладка",
+    "Layout": "Компоновка",
+    "Macros": "Макросы",
+    "Lighting": "Подсветка",
+    "Tap Dance": "Тап-данс",
+    "Combos": "Комбо",
+    "Key Overrides": "Переопределения",
+    "QMK Settings": "Настройки QMK",
+    "Matrix tester": "Тест матрицы",
+    "Firmware updater": "Обновление прошивки",
+    # Keycode tabs
+    "Basic": "Основные",
+    "ISO/JIS": "ISO/JIS",
+    "Layers": "Слои",
+    "Quantum": "Квантум",
+    "Backlight": "Подсветка",
+    "App, Media and Mouse": "Медиа и мышь",
+    "User": "Пользователь",
+    "Macro": "Макрос",
+    # Buttons
+    "Save": "Сохранить",
+    "Revert": "Отменить",
+    "Reset": "Сбросить",
+    "Undo": "Отменить",
+    "Refresh": "Обновить",
+    "Flash": "Прошить",
+    "Select file...": "Выбрать файл...",
+    "Restore current layout after flashing": "Восстановить раскладку после прошивки",
+    # KeymapEditor
+    "Layer": "Слой",
+    # KeyOverride
+    "Enable all": "Включить все",
+    "Disable all": "Выключить все",
+    # MatrixTest
+    "Unlock the keyboard before testing:": "Разблокируйте клавиатуру перед тестом:",
+    # MacroTab
+    "Append to current": "Добавить к текущему",
+    "Replace everything": "Заменить всё",
+    "Record macro": "Записать макрос",
+    "Stop recording": "Остановить запись",
+    "Add action": "Добавить действие",
+    "Tap Enter": "Нажать Enter",
+    "Open Text Editor...": "Открыть текстовый редактор...",
+    # Macro action types
+    "Text": "Текст",
+    "Down": "Нажать",
+    "Up": "Отпустить",
+    "Tap": "Тап",
+    "Delay (ms)": "Задержка (мс)",
+    # RGBConfigurator
+    "Underglow Effect": "Эффект подсветки снизу",
+    "Underglow Brightness": "Яркость подсветки снизу",
+    "Underglow Color": "Цвет подсветки снизу",
+    "Backlight Brightness": "Яркость подсветки",
+    "Backlight Breathing": "Пульсация подсветки",
+    "RGB Effect": "Эффект RGB",
+    "RGB Color": "Цвет RGB",
+    "RGB Brightness": "Яркость RGB",
+    "RGB Speed": "Скорость RGB",
+    # AnyKeycodeDialog
+    "Enter an arbitrary keycode": "Введите произвольный код клавиши",
+    "Enter an expression": "Введите выражение",
+    "Invalid input": "Неверный ввод",
+    # MainWindow menus
+    "Load saved layout...": "Загрузить сохранённую раскладку...",
+    "Save current layout...": "Сохранить текущую раскладку...",
+    "Sideload VIA JSON...": "Загрузить VIA JSON...",
+    "Download VIA definitions": "Скачать определения VIA",
+    "Load dummy JSON...": "Загрузить тестовый JSON...",
+    "Exit": "Выход",
+    "File": "Файл",
+    "Unlock": "Разблокировать",
+    "Lock": "Заблокировать",
+    "Reboot to bootloader": "Перезагрузить в загрузчик",
+    "Keyboard layout": "Раскладка клавиатуры",
+    "Security": "Безопасность",
+    "Theme": "Тема",
+    "About Vial...": "О программе Vial...",
+    "About": "О программе",
+    "In order to fully apply the theme you should restart the application.":
+        "Для полного применения темы перезапустите приложение.",
+    # QmkSettings
+    "Reset all settings to default values?": "Сбросить все настройки до значений по умолчанию?",
+}
+
+
+def _tr(context, text):
+    return _TRANSLATIONS.get(text, text)
+
+
+tr = _tr
 
 # For Vial keyboard
 VIAL_SERIAL_NUMBER_MAGIC = "vial:f64c2b3c"
