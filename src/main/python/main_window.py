@@ -153,99 +153,103 @@ class MainWindow(QMainWindow):
             QTimer.singleShot(100, vialglue.notify_ready)
 
     def init_menu(self):
-        layout_load_act = QAction(tr("MenuFile", "Load saved layout..."), self)
-        layout_load_act.setShortcut("Ctrl+O")
-        layout_load_act.triggered.connect(self.on_layout_load)
+        self.act_layout_load = QAction(self)
+        self.act_layout_load.setShortcut("Ctrl+O")
+        self.act_layout_load.triggered.connect(self.on_layout_load)
 
-        layout_save_act = QAction(tr("MenuFile", "Save current layout..."), self)
-        layout_save_act.setShortcut("Ctrl+S")
-        layout_save_act.triggered.connect(self.on_layout_save)
+        self.act_layout_save = QAction(self)
+        self.act_layout_save.setShortcut("Ctrl+S")
+        self.act_layout_save.triggered.connect(self.on_layout_save)
 
-        sideload_json_act = QAction(tr("MenuFile", "Sideload VIA JSON..."), self)
-        sideload_json_act.triggered.connect(self.on_sideload_json)
+        self.act_sideload_json = QAction(self)
+        self.act_sideload_json.triggered.connect(self.on_sideload_json)
 
-        download_via_stack_act = QAction(tr("MenuFile", "Download VIA definitions"), self)
-        download_via_stack_act.triggered.connect(self.load_via_stack_json)
+        self.act_download_via_stack = QAction(self)
+        self.act_download_via_stack.triggered.connect(self.load_via_stack_json)
 
-        load_dummy_act = QAction(tr("MenuFile", "Load dummy JSON..."), self)
-        load_dummy_act.triggered.connect(self.on_load_dummy)
+        self.act_load_dummy = QAction(self)
+        self.act_load_dummy.triggered.connect(self.on_load_dummy)
 
-        exit_act = QAction(tr("MenuFile", "Exit"), self)
-        exit_act.setShortcut("Ctrl+Q")
-        exit_act.triggered.connect(self.close)
+        self.act_exit = QAction(self)
+        self.act_exit.setShortcut("Ctrl+Q")
+        self.act_exit.triggered.connect(self.close)
 
-        file_menu = self.menuBar().addMenu(tr("Menu", "File"))
-        file_menu.addAction(layout_load_act)
-        file_menu.addAction(layout_save_act)
+        self.file_menu = self.menuBar().addMenu("")
+        self.file_menu.addAction(self.act_layout_load)
+        self.file_menu.addAction(self.act_layout_save)
 
         if sys.platform != "emscripten":
-            file_menu.addSeparator()
-            file_menu.addAction(sideload_json_act)
-            file_menu.addAction(download_via_stack_act)
-            file_menu.addAction(load_dummy_act)
-            file_menu.addSeparator()
-            file_menu.addAction(exit_act)
+            self.file_menu.addSeparator()
+            self.file_menu.addAction(self.act_sideload_json)
+            self.file_menu.addAction(self.act_download_via_stack)
+            self.file_menu.addAction(self.act_load_dummy)
+            self.file_menu.addSeparator()
+            self.file_menu.addAction(self.act_exit)
 
-        keyboard_unlock_act = QAction(tr("MenuSecurity", "Unlock"), self)
-        keyboard_unlock_act.setShortcut("Ctrl+U")
-        keyboard_unlock_act.triggered.connect(self.unlock_keyboard)
+        self.act_keyboard_unlock = QAction(self)
+        self.act_keyboard_unlock.setShortcut("Ctrl+U")
+        self.act_keyboard_unlock.triggered.connect(self.unlock_keyboard)
 
-        keyboard_lock_act = QAction(tr("MenuSecurity", "Lock"), self)
-        keyboard_lock_act.setShortcut("Ctrl+L")
-        keyboard_lock_act.triggered.connect(self.lock_keyboard)
+        self.act_keyboard_lock = QAction(self)
+        self.act_keyboard_lock.setShortcut("Ctrl+L")
+        self.act_keyboard_lock.triggered.connect(self.lock_keyboard)
 
-        keyboard_reset_act = QAction(tr("MenuSecurity", "Reboot to bootloader"), self)
-        keyboard_reset_act.setShortcut("Ctrl+B")
-        keyboard_reset_act.triggered.connect(self.reboot_to_bootloader)
+        self.act_keyboard_reset = QAction(self)
+        self.act_keyboard_reset.setShortcut("Ctrl+B")
+        self.act_keyboard_reset.triggered.connect(self.reboot_to_bootloader)
 
-        keyboard_layout_menu = self.menuBar().addMenu(tr("Menu", "Keyboard layout"))
+        self.keyboard_layout_menu = self.menuBar().addMenu("")
+        self.keymap_actions = []
         keymap_group = QActionGroup(self)
         selected_keymap = self.settings.value("keymap")
         for idx, keymap in enumerate(KEYMAPS):
-            act = QAction(tr("KeyboardLayout", keymap[0]), self)
+            act = QAction(self)
             act.triggered.connect(lambda checked, x=idx: self.change_keyboard_layout(x))
             act.setCheckable(True)
+            act.setData(keymap[0])
             if selected_keymap == keymap[0]:
                 self.change_keyboard_layout(idx)
                 act.setChecked(True)
             keymap_group.addAction(act)
-            keyboard_layout_menu.addAction(act)
-        # check "QWERTY" if nothing else is selected
+            self.keyboard_layout_menu.addAction(act)
+            self.keymap_actions.append(act)
         if keymap_group.checkedAction() is None:
             keymap_group.actions()[0].setChecked(True)
 
-        self.security_menu = self.menuBar().addMenu(tr("Menu", "Security"))
-        self.security_menu.addAction(keyboard_unlock_act)
-        self.security_menu.addAction(keyboard_lock_act)
+        self.security_menu = self.menuBar().addMenu("")
+        self.security_menu.addAction(self.act_keyboard_unlock)
+        self.security_menu.addAction(self.act_keyboard_lock)
         self.security_menu.addSeparator()
-        self.security_menu.addAction(keyboard_reset_act)
+        self.security_menu.addAction(self.act_keyboard_reset)
 
         if sys.platform != "emscripten":
-            self.theme_menu = self.menuBar().addMenu(tr("Menu", "Theme"))
+            self.theme_menu = self.menuBar().addMenu("")
+            self.theme_actions = []
             theme_group = QActionGroup(self)
             selected_theme = self.get_theme()
             for name, _ in [("System", None)] + themes.themes:
-                act = QAction(tr("MenuTheme", name), self)
-                act.triggered.connect(lambda x,name=name: self.set_theme(name))
+                act = QAction(self)
+                act.triggered.connect(lambda x, name=name: self.set_theme(name))
                 act.setCheckable(True)
                 act.setChecked(selected_theme == name)
+                act.setData(name)
                 theme_group.addAction(act)
                 self.theme_menu.addAction(act)
-            # check "System" if nothing else is selected
+                self.theme_actions.append(act)
             if theme_group.checkedAction() is None:
                 theme_group.actions()[0].setChecked(True)
 
-        about_vial_act = QAction(tr("MenuAbout", "About Vial..."), self)
-        about_vial_act.triggered.connect(self.about_vial)
+        self.act_about_vial = QAction(self)
+        self.act_about_vial.triggered.connect(self.about_vial)
         self.about_keyboard_act = QAction("", self)
         self.about_keyboard_act.triggered.connect(self.about_keyboard)
-        self.about_menu = self.menuBar().addMenu(tr("Menu", "About"))
+        self.about_menu = self.menuBar().addMenu("")
         self.about_menu.addAction(self.about_keyboard_act)
-        self.about_menu.addAction(about_vial_act)
+        self.about_menu.addAction(self.act_about_vial)
 
         # Language menu
         from i18n import get_available_languages, get_saved_language
-        self.language_menu = self.menuBar().addMenu(tr("Menu", "Language"))
+        self.language_menu = self.menuBar().addMenu("")
         language_group = QActionGroup(self)
         current_lang = get_saved_language()
         for code, name in get_available_languages():
@@ -255,9 +259,10 @@ class MainWindow(QMainWindow):
             act.triggered.connect(lambda checked, c=code: self._on_language_changed(c))
             language_group.addAction(act)
             self.language_menu.addAction(act)
-        # if nothing checked, check first (English)
         if language_group.checkedAction() is None:
             language_group.actions()[0].setChecked(True)
+
+        self.retranslateMenus()
 
     def on_layout_loaded(self, layout):
         """
@@ -368,8 +373,33 @@ class MainWindow(QMainWindow):
             c = EditorContainer(container)
             self.tabs.addTab(c, tr("MainWindow", lbl))
 
-    def retranslateUi(self):
+    def retranslateMenus(self):
+        """Update all menu/action translatable strings."""
         self.btn_refresh_devices.setText(tr("MainWindow", "Refresh"))
+        self.file_menu.setTitle(tr("Menu", "File"))
+        self.act_layout_load.setText(tr("MenuFile", "Load saved layout..."))
+        self.act_layout_save.setText(tr("MenuFile", "Save current layout..."))
+        self.act_sideload_json.setText(tr("MenuFile", "Sideload VIA JSON..."))
+        self.act_download_via_stack.setText(tr("MenuFile", "Download VIA definitions"))
+        self.act_load_dummy.setText(tr("MenuFile", "Load dummy JSON..."))
+        self.act_exit.setText(tr("MenuFile", "Exit"))
+        self.keyboard_layout_menu.setTitle(tr("Menu", "Keyboard layout"))
+        for act in self.keymap_actions:
+            act.setText(tr("KeyboardLayout", act.data()))
+        self.security_menu.setTitle(tr("Menu", "Security"))
+        self.act_keyboard_unlock.setText(tr("MenuSecurity", "Unlock"))
+        self.act_keyboard_lock.setText(tr("MenuSecurity", "Lock"))
+        self.act_keyboard_reset.setText(tr("MenuSecurity", "Reboot to bootloader"))
+        if hasattr(self, 'theme_menu'):
+            self.theme_menu.setTitle(tr("Menu", "Theme"))
+            for act in self.theme_actions:
+                act.setText(tr("MenuTheme", act.data()))
+        self.about_menu.setTitle(tr("Menu", "About"))
+        self.act_about_vial.setText(tr("MenuAbout", "About Vial..."))
+        self.language_menu.setTitle(tr("Menu", "Language"))
+
+    def retranslateUi(self):
+        self.retranslateMenus()
         for i in range(self.tabs.count()):
             w = self.tabs.widget(i)
             if hasattr(w, 'editor'):
