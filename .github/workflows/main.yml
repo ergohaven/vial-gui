@@ -86,10 +86,11 @@ jobs:
         Remove-Item "vcredist_x64.exe"
 
     - name: Compile translations
-      shell: cmd
       run: |
-        choco install -y qttools || echo "qttools already installed"
-        lrelease src\main\resources\base\i18n\vial_ru.ts -qm src\main\resources\base\i18n\vial_ru.qm
+        . .\venv\Scripts\activate.ps1
+        python -c "from PyQt5.QtCore import QLibraryInfo; import os; print(os.path.join(QLibraryInfo.location(QLibraryInfo.BinariesPath), 'lrelease.exe'))" > lrelease_path.txt
+        $lrelease = (Get-Content lrelease_path.txt).Trim()
+        & $lrelease src/main/resources/base/i18n/vial_ru.ts -qm src/main/resources/base/i18n/vial_ru.qm
 
     - name: Build
       run: |
