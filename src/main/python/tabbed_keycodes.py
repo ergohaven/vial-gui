@@ -239,6 +239,18 @@ class FilteredTabbedKeycodes(QTabWidget):
                 if tab.label == prev_tab:
                     self.setCurrentIndex(self.count() - 1)
 
+    def retranslateUi(self):
+        for i in range(self.count()):
+            tab = self.widget(i)
+            if hasattr(tab, 'label'):
+                self.setTabText(i, tr("TabbedKeycodes", tab.label))
+
+    def changeEvent(self, event):
+        from PyQt5.QtCore import QEvent
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi()
+        super().changeEvent(event)
+
     def on_keymap_override(self):
         for tab in self.tabs:
             tab.relabel_buttons()
