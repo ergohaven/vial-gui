@@ -148,6 +148,10 @@ class TapDance(BasicEditor):
     def retranslateUi(self):
         self.btn_save.setText(tr("TapDance", "Save"))
         self.btn_revert.setText(tr("TapDance", "Revert"))
+        # retranslate all entry UIs (including those not currently in tabs)
+        for entry in self.tap_dance_entries_available:
+            if hasattr(entry, 'retranslateUi'):
+                entry.retranslateUi()
 
     def changeEvent(self, event):
         from PyQt5.QtCore import QEvent
