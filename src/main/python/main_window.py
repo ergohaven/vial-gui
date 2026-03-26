@@ -461,7 +461,12 @@ class MainWindow(QMainWindow):
         from PyQt5.QtWidgets import QApplication
         from i18n import switch_language
         switch_language(QApplication.instance(), locale_code)
-        # Qt automatically sends LanguageChange event to all top-level widgets
+        # Qt sends LanguageChange to QWidgets, but editors are QLayouts —
+        # manually call retranslateUi on all of them
+        for editor, lbl in self.editors:
+            if hasattr(editor, 'retranslateUi'):
+                editor.retranslateUi()
+        self.retranslateUi()
 
     def on_tab_changed(self, index):
         TabbedKeycodes.close_tray()
