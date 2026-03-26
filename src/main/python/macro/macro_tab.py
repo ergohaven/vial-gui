@@ -89,6 +89,10 @@ class MacroTab(QVBoxLayout):
         self.btn_add.setText(tr("MacroRecorder", "Add action"))
         self.btn_tap_enter.setText(tr("MacroRecorder", "Tap Enter"))
         self.btn_text_window.setText(tr("MacroRecorder", "Open Text Editor..."))
+        # retranslate all macro lines
+        for line in self.lines:
+            if hasattr(line, 'retranslateUi'):
+                line.retranslateUi()
 
     def add_action(self, act):
         if self.parent.keyboard.vial_protocol < VIAL_PROTOCOL_EXT_MACROS:
