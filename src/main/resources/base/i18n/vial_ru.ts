@@ -491,5 +491,235 @@
 </translation>
     </message>
 </context>
+
+<context>
+    <name>MacroLine</name>
+    <message>
+        <source>Text</source>
+        <translation>Текст</translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation>Нажать</translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation>Отпустить</translation>
+    </message>
+    <message>
+        <source>Tap</source>
+        <translation>Тап</translation>
+    </message>
+    <message>
+        <source>Delay (ms)</source>
+        <translation>Задержка (мс)</translation>
+    </message>
+</context>
+<context>
+    <name>QmkSettingsTab</name>
+    <message>
+        <source>Magic</source>
+        <translation>Магия</translation>
+    </message>
+    <message>
+        <source>Grave Escape</source>
+        <translation>Grave Escape</translation>
+    </message>
+    <message>
+        <source>Tap-Hold</source>
+        <translation>Тап-удержание</translation>
+    </message>
+    <message>
+        <source>Auto Shift</source>
+        <translation>Авто Shift</translation>
+    </message>
+    <message>
+        <source>Combo</source>
+        <translation>Комбо</translation>
+    </message>
+    <message>
+        <source>One Shot Keys</source>
+        <translation>Одиночные клавиши</translation>
+    </message>
+    <message>
+        <source>Mouse keys</source>
+        <translation>Клавиши мыши</translation>
+    </message>
+    <message>
+        <source>Auto mouse</source>
+        <translation>Авто-мышь</translation>
+    </message>
+</context>
+<context>
+    <name>QmkSettingsField</name>
+    <message>
+        <source>Swap Caps Lock and Left Control</source>
+        <translation>Поменять Caps Lock и левый Control</translation>
+    </message>
+    <message>
+        <source>Treat Caps Lock as Control</source>
+        <translation>Использовать Caps Lock как Control</translation>
+    </message>
+    <message>
+        <source>Swap Left Alt and GUI</source>
+        <translation>Поменять левый Alt и GUI</translation>
+    </message>
+    <message>
+        <source>Swap Right Alt and GUI</source>
+        <translation>Поменять правый Alt и GUI</translation>
+    </message>
+    <message>
+        <source>Disable the GUI keys</source>
+        <translation>Отключить клавиши GUI</translation>
+    </message>
+    <message>
+        <source>Swap ` and Escape</source>
+        <translation>Поменять ` и Escape</translation>
+    </message>
+    <message>
+        <source>Swap \ and Backspace</source>
+        <translation>Поменять \ и Backspace</translation>
+    </message>
+    <message>
+        <source>Enable N-key rollover</source>
+        <translation>Включить N-key rollover</translation>
+    </message>
+    <message>
+        <source>Swap Left Control and GUI</source>
+        <translation>Поменять левый Control и GUI</translation>
+    </message>
+    <message>
+        <source>Swap Right Control and GUI</source>
+        <translation>Поменять правый Control и GUI</translation>
+    </message>
+    <message>
+        <source>Always send Escape if Alt is pressed</source>
+        <translation>Всегда отправлять Escape при нажатии Alt</translation>
+    </message>
+    <message>
+        <source>Always send Escape if Control is pressed</source>
+        <translation>Всегда отправлять Escape при нажатии Control</translation>
+    </message>
+    <message>
+        <source>Always send Escape if GUI is pressed</source>
+        <translation>Всегда отправлять Escape при нажатии GUI</translation>
+    </message>
+    <message>
+        <source>Always send Escape if Shift is pressed</source>
+        <translation>Всегда отправлять Escape при нажатии Shift</translation>
+    </message>
+    <message>
+        <source>Tapping Term</source>
+        <translation>Время нажатия (мс)</translation>
+    </message>
+    <message>
+        <source>Permissive Hold</source>
+        <translation>Разрешительное удержание</translation>
+    </message>
+    <message>
+        <source>Ignore Mod Tap Interrupt</source>
+        <translation>Игнорировать прерывание Mod Tap</translation>
+    </message>
+    <message>
+        <source>Tapping Force Hold</source>
+        <translation>Принудительное удержание при тапе</translation>
+    </message>
+    <message>
+        <source>Retro Tapping</source>
+        <translation>Ретро-тап</translation>
+    </message>
+    <message>
+        <source>Tap Code Delay</source>
+        <translation>Задержка кода тапа (мс)</translation>
+    </message>
+    <message>
+        <source>Tap Hold Caps Delay</source>
+        <translation>Задержка Caps при тап-удержании (мс)</translation>
+    </message>
+    <message>
+        <source>Tapping Toggle</source>
+        <translation>Переключение тапом</translation>
+    </message>
+    <message>
+        <source>Enable</source>
+        <translation>Включить</translation>
+    </message>
+    <message>
+        <source>Enable for modifiers</source>
+        <translation>Включить для модификаторов</translation>
+    </message>
+    <message>
+        <source>Timeout</source>
+        <translation>Таймаут (мс)</translation>
+    </message>
+    <message>
+        <source>Do not Auto Shift special keys</source>
+        <translation>Не применять к спецклавишам</translation>
+    </message>
+    <message>
+        <source>Do not Auto Shift numeric keys</source>
+        <translation>Не применять к цифрам</translation>
+    </message>
+    <message>
+        <source>Do not Auto Shift alpha characters</source>
+        <translation>Не применять к буквам</translation>
+    </message>
+    <message>
+        <source>Enable keyrepeat</source>
+        <translation>Включить повтор клавиш</translation>
+    </message>
+    <message>
+        <source>Disable keyrepeat when timeout is exceeded</source>
+        <translation>Отключить повтор при превышении таймаута</translation>
+    </message>
+    <message>
+        <source>Time out period for combos</source>
+        <translation>Таймаут комбинаций (мс)</translation>
+    </message>
+    <message>
+        <source>Tapping this number of times holds the key until tapped once again</source>
+        <translation>Количество нажатий для фиксации клавиши</translation>
+    </message>
+    <message>
+        <source>Time (in ms) before the one shot key is released</source>
+        <translation>Время удержания одиночной клавиши (мс)</translation>
+    </message>
+    <message>
+        <source>Delay between pressing a movement key and cursor movement</source>
+        <translation>Задержка перед началом движения курсора (мс)</translation>
+    </message>
+    <message>
+        <source>Time between cursor movements in milliseconds</source>
+        <translation>Интервал между шагами курсора (мс)</translation>
+    </message>
+    <message>
+        <source>Step size</source>
+        <translation>Размер шага</translation>
+    </message>
+    <message>
+        <source>Maximum cursor speed at which acceleration stops</source>
+        <translation>Максимальная скорость курсора</translation>
+    </message>
+    <message>
+        <source>Time until maximum cursor speed is reached</source>
+        <translation>Время разгона курсора (мс)</translation>
+    </message>
+    <message>
+        <source>Delay between pressing a wheel key and wheel movement</source>
+        <translation>Задержка перед прокруткой (мс)</translation>
+    </message>
+    <message>
+        <source>Time between wheel movements</source>
+        <translation>Интервал прокрутки (мс)</translation>
+    </message>
+    <message>
+        <source>Maximum number of scroll steps per scroll action</source>
+        <translation>Максимальное количество шагов прокрутки</translation>
+    </message>
+    <message>
+        <source>Time until maximum scroll speed is reached</source>
+        <translation>Время разгона прокрутки (мс)</translation>
+    </message>
+</context>
 </TS>
 
