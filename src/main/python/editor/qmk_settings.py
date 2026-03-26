@@ -180,10 +180,14 @@ class QmkSettings(BasicEditor):
         if hasattr(self, 'tab_names'):
             for i, name in enumerate(self.tab_names):
                 if i < self.tabs_widget.count():
-                    # preserve any trailing "*" (unsaved changes marker)
                     current = self.tabs_widget.tabText(i)
                     suffix = "*" if current.endswith("*") else ""
                     self.tabs_widget.setTabText(i, tr("QmkSettingsTab", name) + suffix)
+        # retranslate all option field labels
+        for tab_opts in self.tabs:
+            for opt in tab_opts:
+                if hasattr(opt, 'retranslateUi'):
+                    opt.retranslateUi()
 
     def changeEvent(self, event):
         from PyQt5.QtCore import QEvent
