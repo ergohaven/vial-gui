@@ -72,13 +72,12 @@ class OptionsUI(QWidget):
 
         container = QVBoxLayout()
 
-        self.opt_activation_trigger_down = CheckBoxNoPadding(tr("KeyOverride", "Activate when the trigger key is pressed down"))
-        self.opt_activation_required_mod_down = CheckBoxNoPadding(tr("KeyOverride", "Activate when a necessary modifier is pressed down"))
-        self.opt_activation_negative_mod_up = CheckBoxNoPadding(tr("KeyOverride", "Activate when a negative modifier is released"))
-        self.opt_one_mod = CheckBoxNoPadding(tr("KeyOverride", "Activate on one modifier"))
-        self.opt_no_reregister_trigger = CheckBoxNoPadding(tr("KeyOverride", "Don't deactivate when another key is pressed down"))
-        self.opt_no_unregister_on_other_key_down = CheckBoxNoPadding(
-            tr("KeyOverride", "Don't register the trigger key again after the override is deactivated"))
+        self.opt_activation_trigger_down = CheckBoxNoPadding()
+        self.opt_activation_required_mod_down = CheckBoxNoPadding()
+        self.opt_activation_negative_mod_up = CheckBoxNoPadding()
+        self.opt_one_mod = CheckBoxNoPadding()
+        self.opt_no_reregister_trigger = CheckBoxNoPadding()
+        self.opt_no_unregister_on_other_key_down = CheckBoxNoPadding()
 
         for w in [self.opt_activation_trigger_down, self.opt_activation_required_mod_down,
                   self.opt_activation_negative_mod_up, self.opt_one_mod, self.opt_no_reregister_trigger,
@@ -87,6 +86,22 @@ class OptionsUI(QWidget):
             container.addWidget(w)
 
         self.setLayout(container)
+
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.opt_activation_trigger_down.setText(tr("KeyOverride", "Activate when the trigger key is pressed down"))
+        self.opt_activation_required_mod_down.setText(tr("KeyOverride", "Activate when a necessary modifier is pressed down"))
+        self.opt_activation_negative_mod_up.setText(tr("KeyOverride", "Activate when a negative modifier is released"))
+        self.opt_one_mod.setText(tr("KeyOverride", "Activate on one modifier"))
+        self.opt_no_reregister_trigger.setText(tr("KeyOverride", "Don't deactivate when another key is pressed down"))
+        self.opt_no_unregister_on_other_key_down.setText(tr("KeyOverride", "Don't register the trigger key again after the override is deactivated"))
+
+    def changeEvent(self, event):
+        from PyQt5.QtCore import QEvent
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi()
+        super().changeEvent(event)
 
     def on_change(self):
         self.changed.emit()
@@ -121,25 +136,35 @@ class LayersUI(QWidget):
         self.layer_chks = [CheckBoxNoPadding(str(x)) for x in range(16)]
         for w in self.layer_chks:
             w.stateChanged.connect(self.on_change)
-        btn_all_layers = QToolButton()
-        btn_all_layers.setText(tr("KeyOverride", "Enable all"))
-        btn_all_layers.setToolButtonStyle(Qt.ToolButtonTextOnly)
-        btn_no_layers = QToolButton()
-        btn_no_layers.setText(tr("KeyOverride", "Disable all"))
-        btn_no_layers.setToolButtonStyle(Qt.ToolButtonTextOnly)
-        btn_all_layers.clicked.connect(self.on_enable_all_layers)
-        btn_no_layers.clicked.connect(self.on_disable_all_layers)
+        self.btn_all_layers = QToolButton()
+        self.btn_all_layers.setToolButtonStyle(Qt.ToolButtonTextOnly)
+        self.btn_no_layers = QToolButton()
+        self.btn_no_layers.setToolButtonStyle(Qt.ToolButtonTextOnly)
+        self.btn_all_layers.clicked.connect(self.on_enable_all_layers)
+        self.btn_no_layers.clicked.connect(self.on_disable_all_layers)
 
         for x in range(8):
             container.addWidget(self.layer_chks[x], 0, x)
             container.addWidget(self.layer_chks[x + 8], 1, x)
 
-        buttons.addWidget(btn_all_layers)
-        buttons.addWidget(btn_no_layers)
+        buttons.addWidget(self.btn_all_layers)
+        buttons.addWidget(self.btn_no_layers)
         buttons.addStretch()
         container.addLayout(buttons, 2, 0, 1, -1)
 
         self.setLayout(container)
+
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.btn_all_layers.setText(tr("KeyOverride", "Enable all"))
+        self.btn_no_layers.setText(tr("KeyOverride", "Disable all"))
+
+    def changeEvent(self, event):
+        from PyQt5.QtCore import QEvent
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi()
+        super().changeEvent(event)
 
     def load(self, data):
         for x, w in enumerate(self.layer_chks):
@@ -198,29 +223,49 @@ class KeyOverrideEntryUI(QObject):
         l.setAlignment(w, QtCore.Qt.AlignHCenter)
         self.w2 = make_scrollable(l)
 
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.lbl_enable.setText(tr("KeyOverride", "Enable"))
+        self.lbl_enable_on_layers.setText(tr("KeyOverride", "Enable on layers"))
+        self.lbl_trigger.setText(tr("KeyOverride", "Trigger"))
+        self.lbl_trigger_mods.setText(tr("KeyOverride", "Trigger mods"))
+        self.lbl_negative_mods.setText(tr("KeyOverride", "Negative mods"))
+        self.lbl_suppressed_mods.setText(tr("KeyOverride", "Suppressed mods"))
+        self.lbl_replacement.setText(tr("KeyOverride", "Replacement"))
+        self.lbl_options.setText(tr("KeyOverride", "Options"))
+
     def populate_container(self):
-        self.container.addWidget(QLabel(tr("KeyOverride", "Enable")), 0, 0)
+        self.lbl_enable = QLabel()
+        self.container.addWidget(self.lbl_enable, 0, 0)
         self.container.addWidget(self.enable_chk, 0, 1)
 
-        self.container.addWidget(QLabel(tr("KeyOverride", "Enable on layers")), 1, 0)
+        self.lbl_enable_on_layers = QLabel()
+        self.container.addWidget(self.lbl_enable_on_layers, 1, 0)
         self.container.addWidget(self.layers, 1, 1)
 
-        self.container.addWidget(QLabel(tr("KeyOverride", "Trigger")), 2, 0)
+        self.lbl_trigger = QLabel()
+        self.container.addWidget(self.lbl_trigger, 2, 0)
         self.container.addWidget(self.trigger_key, 2, 1)
 
-        self.container.addWidget(QLabel(tr("KeyOverride", "Trigger mods")), 3, 0)
+        self.lbl_trigger_mods = QLabel()
+        self.container.addWidget(self.lbl_trigger_mods, 3, 0)
         self.container.addWidget(self.trigger_mods, 3, 1)
 
-        self.container.addWidget(QLabel(tr("KeyOverride", "Negative mods")), 4, 0)
+        self.lbl_negative_mods = QLabel()
+        self.container.addWidget(self.lbl_negative_mods, 4, 0)
         self.container.addWidget(self.negative_mods, 4, 1)
 
-        self.container.addWidget(QLabel(tr("KeyOverride", "Suppressed mods")), 5, 0)
+        self.lbl_suppressed_mods = QLabel()
+        self.container.addWidget(self.lbl_suppressed_mods, 5, 0)
         self.container.addWidget(self.suppressed_mods, 5, 1)
 
-        self.container.addWidget(QLabel(tr("KeyOverride", "Replacement")), 6, 0)
+        self.lbl_replacement = QLabel()
+        self.container.addWidget(self.lbl_replacement, 6, 0)
         self.container.addWidget(self.key_replacement, 6, 1)
 
-        self.container.addWidget(QLabel(tr("KeyOverride", "Options")), 7, 0)
+        self.lbl_options = QLabel()
+        self.container.addWidget(self.lbl_options, 7, 0)
         self.container.addWidget(self.options, 7, 1)
 
     def widget(self):
