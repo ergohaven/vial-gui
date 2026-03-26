@@ -34,31 +34,46 @@ class TapDanceEntryUI(QObject):
         l.addWidget(w)
         l.setAlignment(w, QtCore.Qt.AlignHCenter)
         l.addSpacing(10)
-        lbl = QLabel(tr("TapDance", "Use <code>TD({})</code> to set up this action in the keymap.").format(self.idx))
-        l.addWidget(lbl)
-        l.setAlignment(lbl, QtCore.Qt.AlignHCenter)
+        self.lbl_usage = QLabel()
+        l.addWidget(self.lbl_usage)
+        l.setAlignment(self.lbl_usage, QtCore.Qt.AlignHCenter)
         l.addStretch()
         self.w2 = QWidget()
         self.w2.setLayout(l)
 
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.lbl_on_tap.setText(tr("TapDance", "On tap"))
+        self.lbl_on_hold.setText(tr("TapDance", "On hold"))
+        self.lbl_on_double_tap.setText(tr("TapDance", "On double tap"))
+        self.lbl_on_tap_hold.setText(tr("TapDance", "On tap + hold"))
+        self.lbl_tapping_term.setText(tr("TapDance", "Tapping term (ms)"))
+        self.lbl_usage.setText(tr("TapDance", "Use <code>TD({})</code> to set up this action in the keymap.").format(self.idx))
+
     def populate_container(self):
-        self.container.addWidget(QLabel(tr("TapDance", "On tap")), 0, 0)
+        self.lbl_on_tap = QLabel()
+        self.container.addWidget(self.lbl_on_tap, 0, 0)
         self.kc_on_tap = KeyWidget()
         self.kc_on_tap.changed.connect(self.on_key_changed)
         self.container.addWidget(self.kc_on_tap, 0, 1)
-        self.container.addWidget(QLabel(tr("TapDance", "On hold")), 1, 0)
+        self.lbl_on_hold = QLabel()
+        self.container.addWidget(self.lbl_on_hold, 1, 0)
         self.kc_on_hold = KeyWidget()
         self.kc_on_hold.changed.connect(self.on_key_changed)
         self.container.addWidget(self.kc_on_hold, 1, 1)
-        self.container.addWidget(QLabel(tr("TapDance", "On double tap")), 2, 0)
+        self.lbl_on_double_tap = QLabel()
+        self.container.addWidget(self.lbl_on_double_tap, 2, 0)
         self.kc_on_double_tap = KeyWidget()
         self.kc_on_double_tap.changed.connect(self.on_key_changed)
         self.container.addWidget(self.kc_on_double_tap, 2, 1)
-        self.container.addWidget(QLabel(tr("TapDance", "On tap + hold")), 3, 0)
+        self.lbl_on_tap_hold = QLabel()
+        self.container.addWidget(self.lbl_on_tap_hold, 3, 0)
         self.kc_on_tap_hold = KeyWidget()
         self.kc_on_tap_hold.changed.connect(self.on_key_changed)
         self.container.addWidget(self.kc_on_tap_hold, 3, 1)
-        self.container.addWidget(QLabel(tr("TapDance", "Tapping term (ms)")), 4, 0)
+        self.lbl_tapping_term = QLabel()
+        self.container.addWidget(self.lbl_tapping_term, 4, 0)
         self.txt_tapping_term = QSpinBox()
         self.txt_tapping_term.valueChanged.connect(self.on_timing_changed)
         self.txt_tapping_term.setMinimum(0)
@@ -120,13 +135,25 @@ class TapDance(BasicEditor):
         self.addWidget(self.tabs)
         buttons = QHBoxLayout()
         buttons.addStretch()
-        self.btn_save = QPushButton(tr("TapDance", "Save"))
+        self.btn_save = QPushButton()
         self.btn_save.clicked.connect(self.on_save)
-        self.btn_revert = QPushButton(tr("TapDance", "Revert"))
+        self.btn_revert = QPushButton()
         self.btn_revert.clicked.connect(self.on_revert)
         buttons.addWidget(self.btn_save)
         buttons.addWidget(self.btn_revert)
         self.addLayout(buttons)
+
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.btn_save.setText(tr("TapDance", "Save"))
+        self.btn_revert.setText(tr("TapDance", "Revert"))
+
+    def changeEvent(self, event):
+        from PyQt5.QtCore import QEvent
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi()
+        super().changeEvent(event)
 
     def rebuild_ui(self):
         while self.tabs.count() > 0:
