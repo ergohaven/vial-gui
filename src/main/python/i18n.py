@@ -71,6 +71,8 @@ def install_translator(app, locale=None):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     search_paths.append(os.path.join(base_dir, "..", "resources", "base", "i18n"))
     search_paths.append(os.path.join(base_dir, "i18n"))
+    # WASM: files are at /usr/local/i18n/
+    search_paths.append("/usr/local/i18n")
 
     for path in search_paths:
         qm_path = os.path.join(path, "vial_ru.qm")
