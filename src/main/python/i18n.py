@@ -29,8 +29,8 @@ def save_language(locale_code):
     # On WASM, also persist to localStorage via JS bridge
     if sys.platform == "emscripten":
         try:
-            from vialglue import send_js_message
-            send_js_message("save_language", locale_code)
+            import vialglue
+            vialglue.save_language(locale_code)
         except Exception:
             pass
 
