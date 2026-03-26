@@ -168,6 +168,7 @@ class QmkSettings(BasicEditor):
 
         self.tabs = []
         self.misc_widgets = []
+        self.tab_names = []
 
         self.retranslateUi()
 
@@ -175,6 +176,14 @@ class QmkSettings(BasicEditor):
         self.btn_save.setText(tr("QmkSettings", "Save"))
         self.btn_undo.setText(tr("QmkSettings", "Undo"))
         self.btn_reset.setText(tr("QmkSettings", "Reset"))
+        # retranslate sub-tabs
+        if hasattr(self, 'tab_names'):
+            for i, name in enumerate(self.tab_names):
+                if i < self.tabs_widget.count():
+                    # preserve any trailing "*" (unsaved changes marker)
+                    current = self.tabs_widget.tabText(i)
+                    suffix = "*" if current.endswith("*") else ""
+                    self.tabs_widget.setTabText(i, tr("QmkSettingsTab", name) + suffix)
 
     def changeEvent(self, event):
         from PyQt5.QtCore import QEvent
@@ -213,6 +222,7 @@ class QmkSettings(BasicEditor):
         self.misc_widgets.clear()
         while self.tabs_widget.count() > 0:
             self.tabs_widget.removeTab(0)
+        self.tab_names = []
 
         # create new GUI
         for tab in self.qmk_settings.settings_defs["tabs"]:
@@ -236,6 +246,7 @@ class QmkSettings(BasicEditor):
             w2.setLayout(l)
             self.misc_widgets += [w, w2]
             self.tabs_widget.addTab(w2, tr("QmkSettingsTab", tab["name"]))
+            self.tab_names.append(tab["name"])
             self.tabs.append(self.populate_tab(tab, container))
 
     def reload_settings(self):
