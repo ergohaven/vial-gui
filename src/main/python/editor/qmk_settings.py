@@ -155,19 +155,32 @@ class QmkSettings(BasicEditor):
         self.addWidget(self.tabs_widget)
         buttons = QHBoxLayout()
         buttons.addStretch()
-        self.btn_save = QPushButton(tr("QmkSettings", "Save"))
+        self.btn_save = QPushButton()
         self.btn_save.clicked.connect(self.save_settings)
         buttons.addWidget(self.btn_save)
-        self.btn_undo = QPushButton(tr("QmkSettings", "Undo"))
+        self.btn_undo = QPushButton()
         self.btn_undo.clicked.connect(self.reload_settings)
         buttons.addWidget(self.btn_undo)
-        btn_reset = QPushButton(tr("QmkSettings", "Reset"))
-        btn_reset.clicked.connect(self.reset_settings)
-        buttons.addWidget(btn_reset)
+        self.btn_reset = QPushButton()
+        self.btn_reset.clicked.connect(self.reset_settings)
+        buttons.addWidget(self.btn_reset)
         self.addLayout(buttons)
 
         self.tabs = []
         self.misc_widgets = []
+
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.btn_save.setText(tr("QmkSettings", "Save"))
+        self.btn_undo.setText(tr("QmkSettings", "Undo"))
+        self.btn_reset.setText(tr("QmkSettings", "Reset"))
+
+    def changeEvent(self, event):
+        from PyQt5.QtCore import QEvent
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi()
+        super().changeEvent(event)
 
     def populate_tab(self, tab, container):
         options = []
