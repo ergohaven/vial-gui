@@ -125,6 +125,7 @@ class MainWindow(QMainWindow):
     def _init_editors(self):
         """Deferred editor initialization — called after window is shown for faster startup."""
         appctx = self._appctx
+        from unlocker import Unlocker
         from editor.layout_editor import LayoutEditor
         from editor.keymap_editor import KeymapEditor
         from editor.firmware_flasher import FirmwareFlasher
@@ -172,6 +173,7 @@ class MainWindow(QMainWindow):
 
 
     def init_menu(self):
+        from keymaps import KEYMAPS
         self.act_layout_load = QAction(self)
         self.act_layout_load.setShortcut("Ctrl+O")
         self.act_layout_load.triggered.connect(self.on_layout_load)
