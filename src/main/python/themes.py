@@ -241,12 +241,38 @@ class Theme:
 
     theme = ""
 
+    FLAT_BUTTON_QSS = """
+        QPushButton, QToolButton {{
+            border: 1px solid rgba(128,128,128,0.25);
+            border-radius: 4px;
+            padding: 3px 10px;
+            background: transparent;
+        }}
+        QPushButton:hover, QToolButton:hover {{
+            background: rgba(128,128,128,0.12);
+        }}
+        QPushButton:pressed, QToolButton:pressed {{
+            background: rgba(128,128,128,0.22);
+        }}
+        QPushButton:checked, QToolButton:checked {{
+            background: rgba(128,128,128,0.18);
+        }}
+        QPushButton:disabled, QToolButton:disabled {{
+            border-color: rgba(128,128,128,0.12);
+            color: rgba(128,128,128,0.5);
+        }}
+    """
+
     @classmethod
     def set_theme(cls, theme):
         cls.theme = theme
         if theme in palettes:
             QApplication.setPalette(palettes[theme])
             QApplication.setStyle("Fusion")
+            QApplication.instance().setStyleSheet(cls.FLAT_BUTTON_QSS)
+        else:
+            # System theme — reset stylesheet
+            QApplication.instance().setStyleSheet("")
         # For default/system theme, do nothing
         # User will have to restart the application for it to be applied
 
