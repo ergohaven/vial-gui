@@ -721,5 +721,53 @@
         <translation>Время разгона прокрутки (мс)</translation>
     </message>
 </context>
+
+<context>
+    <name>TabbedKeycodes</name>
+    <message>
+        <source>Basic</source>
+        <translation>Основные</translation>
+    </message>
+    <message>
+        <source>ISO/JIS</source>
+        <translation>ISO/JIS</translation>
+    </message>
+    <message>
+        <source>Layers</source>
+        <translation>Слои</translation>
+    </message>
+    <message>
+        <source>Quantum</source>
+        <translation>Квантум</translation>
+    </message>
+    <message>
+        <source>Backlight</source>
+        <translation>Подсветка</translation>
+    </message>
+    <message>
+        <source>App, Media and Mouse</source>
+        <translation>Медиа и мышь</translation>
+    </message>
+    <message>
+        <source>MIDI</source>
+        <translation>MIDI</translation>
+    </message>
+    <message>
+        <source>Tap Dance</source>
+        <translation>Тап-данс</translation>
+    </message>
+    <message>
+        <source>User</source>
+        <translation>Пользователь</translation>
+    </message>
+    <message>
+        <source>Macro</source>
+        <translation>Макрос</translation>
+    </message>
+    <message>
+        <source>Unicode</source>
+        <translation>Юникод</translation>
+    </message>
+</context>
 </TS>
 
