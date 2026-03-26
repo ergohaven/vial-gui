@@ -86,14 +86,10 @@ jobs:
         Remove-Item "vcredist_x64.exe"
 
     - name: Compile translations
+      shell: cmd
       run: |
-        pip install pyqt5
-        python -c "
-import subprocess, sys, os
-from PyQt5.QtCore import QLibraryInfo
-lrelease = os.path.join(QLibraryInfo.location(QLibraryInfo.BinariesPath), 'lrelease.exe')
-subprocess.run([lrelease, 'src/main/resources/base/i18n/vial_ru.ts', '-qm', 'src/main/resources/base/i18n/vial_ru.qm'], check=True)
-"
+        choco install -y qttools || echo "qttools already installed"
+        lrelease src\main\resources\base\i18n\vial_ru.ts -qm src\main\resources\base\i18n\vial_ru.qm
 
     - name: Build
       run: |
