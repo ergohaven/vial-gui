@@ -5,6 +5,8 @@ from PyQt5.QtCore import QTranslator, QLocale, QSettings
 
 _translator = None
 SETTINGS_KEY = "language"
+# Sentinel value meaning "user has never chosen a language — use system locale"
+LANG_AUTO = "__auto__"
 
 def get_available_languages():
     """Returns list of (locale_code, display_name) tuples"""
@@ -14,12 +16,13 @@ def get_available_languages():
     ]
 
 def get_saved_language():
-    """Get previously saved language preference"""
+    """Get previously saved language preference. Returns '' for English, 'ru' for Russian,
+    or LANG_AUTO if the user has never made a choice."""
     settings = QSettings("Vial", "Vial")
-    return settings.value(SETTINGS_KEY, "")
+    return settings.value(SETTINGS_KEY, LANG_AUTO)
 
 def save_language(locale_code):
-    """Save language preference"""
+    """Save language preference. Pass '' to explicitly select English."""
     settings = QSettings("Vial", "Vial")
     settings.setValue(SETTINGS_KEY, locale_code)
 
@@ -34,15 +37,20 @@ def switch_language(app, locale_code):
         install_translator(app, locale_code)
 
 def install_translator(app, locale=None):
-    """Install translator based on locale or saved preference."""
+    """Install translator based on locale or saved preference.
+    On first run (no saved preference), auto-detects system locale."""
     global _translator
 
     if locale is None:
         saved = get_saved_language()
-        if saved:
+        if saved == LANG_AUTO:
+            # First run: use system locale
+            locale = QLocale.system().name()
+        elif saved:
             locale = saved
         else:
-            locale = QLocale.system().name()
+            # User explicitly chose English
+            return
 
     if not locale.startswith("ru"):
         return
