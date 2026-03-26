@@ -30,33 +30,33 @@ class MacroTab(QVBoxLayout):
 
         self.container = QGridLayout()
 
-        menu_record = QMenu()
-        menu_record.addAction(tr("MacroRecorder", "Append to current"))\
-            .triggered.connect(lambda: self.record.emit(self, True))
-        menu_record.addAction(tr("MacroRecorder", "Replace everything"))\
-            .triggered.connect(lambda: self.record.emit(self, False))
+        self.menu_record_append_act = None
+        self.menu_record_replace_act = None
 
-        self.btn_record = QPushButton(tr("MacroRecorder", "Record macro"))
+        menu_record = QMenu()
+        self.menu_record_append_act = menu_record.addAction("")
+        self.menu_record_append_act.triggered.connect(lambda: self.record.emit(self, True))
+        self.menu_record_replace_act = menu_record.addAction("")
+        self.menu_record_replace_act.triggered.connect(lambda: self.record.emit(self, False))
+
+        self.btn_record = QPushButton()
         self.btn_record.setMenu(menu_record)
         if not enable_recorder:
             self.btn_record.hide()
 
-        self.btn_record_stop = QPushButton(tr("MacroRecorder", "Stop recording"))
+        self.btn_record_stop = QPushButton()
         self.btn_record_stop.clicked.connect(lambda: self.record_stop.emit())
         self.btn_record_stop.hide()
 
         self.btn_add = QToolButton()
-        self.btn_add.setText(tr("MacroRecorder", "Add action"))
         self.btn_add.setToolButtonStyle(Qt.ToolButtonTextOnly)
         self.btn_add.clicked.connect(self.on_add)
 
         self.btn_tap_enter = QToolButton()
-        self.btn_tap_enter.setText(tr("MacroRecorder", "Tap Enter"))
         self.btn_tap_enter.setToolButtonStyle(Qt.ToolButtonTextOnly)
         self.btn_tap_enter.clicked.connect(self.on_tap_enter)
 
         self.btn_text_window = QToolButton()
-        self.btn_text_window.setText(tr("MacroRecorder", "Open Text Editor..."))
         self.btn_text_window.setToolButtonStyle(Qt.ToolButtonTextOnly)
         self.btn_text_window.clicked.connect(self.on_text_window)
 
@@ -76,6 +76,19 @@ class MacroTab(QVBoxLayout):
         self.addLayout(layout_buttons)
 
         self.dlg_textbox = None
+
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        if self.menu_record_append_act:
+            self.menu_record_append_act.setText(tr("MacroRecorder", "Append to current"))
+        if self.menu_record_replace_act:
+            self.menu_record_replace_act.setText(tr("MacroRecorder", "Replace everything"))
+        self.btn_record.setText(tr("MacroRecorder", "Record macro"))
+        self.btn_record_stop.setText(tr("MacroRecorder", "Stop recording"))
+        self.btn_add.setText(tr("MacroRecorder", "Add action"))
+        self.btn_tap_enter.setText(tr("MacroRecorder", "Tap Enter"))
+        self.btn_text_window.setText(tr("MacroRecorder", "Open Text Editor..."))
 
     def add_action(self, act):
         if self.parent.keyboard.vial_protocol < VIAL_PROTOCOL_EXT_MACROS:
