@@ -139,8 +139,9 @@ class Keycode:
         elif len(val) == 1 and ord(val) < 0x7FFF:
             return 0x8000 + ord(val)
         elif val.startswith('UC\n'):
-            val = val.lstrip('UC\n')
-            return 0x8000 + ord(val)
+            val = val[len('UC\n'):]
+            if len(val) == 1:
+                return 0x8000 + ord(val)
         anykc = AnyKeycode()
         try:
             return anykc.decode(val)
