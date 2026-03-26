@@ -32,10 +32,10 @@ class KeymapEditor(BasicEditor):
 
         self.layout_layers = QHBoxLayout()
         self.layout_size = QVBoxLayout()
-        layer_label = QLabel(tr("KeymapEditor", "Layer"))
+        self.layer_label = QLabel()
 
         layout_labels_container = QHBoxLayout()
-        layout_labels_container.addWidget(layer_label)
+        layout_labels_container.addWidget(self.layer_label)
         layout_labels_container.addLayout(self.layout_layers)
         layout_labels_container.addStretch()
         layout_labels_container.addLayout(self.layout_size)
@@ -70,6 +70,17 @@ class KeymapEditor(BasicEditor):
 
         self.device = None
         KeycodeDisplay.notify_keymap_override(self)
+
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.layer_label.setText(tr("KeymapEditor", "Layer"))
+
+    def changeEvent(self, event):
+        from PyQt5.QtCore import QEvent
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi()
+        super().changeEvent(event)
 
     def on_empty_space_clicked(self):
         self.container.deselect()
