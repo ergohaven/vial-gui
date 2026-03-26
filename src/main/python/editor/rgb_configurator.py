@@ -163,14 +163,14 @@ class QmkRgblightHandler(BasicHandler):
 
         row = container.rowCount()
 
-        self.lbl_underglow_effect = QLabel(tr("RGBConfigurator", "Underglow Effect"))
+        self.lbl_underglow_effect = QLabel()
         container.addWidget(self.lbl_underglow_effect, row, 0)
         self.underglow_effect = QComboBox()
         for ef in QMK_RGBLIGHT_EFFECTS:
             self.underglow_effect.addItem(ef.name)
         container.addWidget(self.underglow_effect, row, 1)
 
-        self.lbl_underglow_brightness = QLabel(tr("RGBConfigurator", "Underglow Brightness"))
+        self.lbl_underglow_brightness = QLabel()
         container.addWidget(self.lbl_underglow_brightness, row + 1, 0)
         self.underglow_brightness = QSlider(QtCore.Qt.Horizontal)
         self.underglow_brightness.setMinimum(0)
@@ -178,7 +178,7 @@ class QmkRgblightHandler(BasicHandler):
         self.underglow_brightness.valueChanged.connect(self.on_underglow_brightness_changed)
         container.addWidget(self.underglow_brightness, row + 1, 1)
 
-        self.lbl_underglow_color = QLabel(tr("RGBConfigurator", "Underglow Color"))
+        self.lbl_underglow_color = QLabel()
         container.addWidget(self.lbl_underglow_color, row + 2, 0)
         self.underglow_color = ClickableLabel(" ")
         self.underglow_color.clicked.connect(self.on_underglow_color)
@@ -188,6 +188,13 @@ class QmkRgblightHandler(BasicHandler):
 
         self.widgets = [self.lbl_underglow_effect, self.underglow_effect, self.lbl_underglow_brightness,
                         self.underglow_brightness, self.lbl_underglow_color, self.underglow_color]
+
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.lbl_underglow_effect.setText(tr("RGBConfigurator", "Underglow Effect"))
+        self.lbl_underglow_brightness.setText(tr("RGBConfigurator", "Underglow Brightness"))
+        self.lbl_underglow_color.setText(tr("RGBConfigurator", "Underglow Color"))
 
     def update_from_keyboard(self):
         if not self.valid():
@@ -241,7 +248,7 @@ class QmkBacklightHandler(BasicHandler):
 
         row = container.rowCount()
 
-        self.lbl_backlight_brightness = QLabel(tr("RGBConfigurator", "Backlight Brightness"))
+        self.lbl_backlight_brightness = QLabel()
         container.addWidget(self.lbl_backlight_brightness, row, 0)
         self.backlight_brightness = QSlider(QtCore.Qt.Horizontal)
         self.backlight_brightness.setMinimum(0)
@@ -249,7 +256,7 @@ class QmkBacklightHandler(BasicHandler):
         self.backlight_brightness.valueChanged.connect(self.on_backlight_brightness_changed)
         container.addWidget(self.backlight_brightness, row, 1)
 
-        self.lbl_backlight_breathing = QLabel(tr("RGBConfigurator", "Backlight Breathing"))
+        self.lbl_backlight_breathing = QLabel()
         container.addWidget(self.lbl_backlight_breathing, row + 1, 0)
         self.backlight_breathing = QCheckBox()
         self.backlight_breathing.stateChanged.connect(self.on_backlight_breathing_changed)
@@ -257,6 +264,12 @@ class QmkBacklightHandler(BasicHandler):
 
         self.widgets = [self.lbl_backlight_brightness, self.backlight_brightness, self.lbl_backlight_breathing,
                         self.backlight_breathing]
+
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.lbl_backlight_brightness.setText(tr("RGBConfigurator", "Backlight Brightness"))
+        self.lbl_backlight_breathing.setText(tr("RGBConfigurator", "Backlight Breathing"))
 
     def update_from_keyboard(self):
         if not self.valid():
@@ -282,7 +295,7 @@ class VialRGBHandler(BasicHandler):
 
         row = container.rowCount()
 
-        self.lbl_rgb_effect = QLabel(tr("RGBConfigurator", "RGB Effect"))
+        self.lbl_rgb_effect = QLabel()
         container.addWidget(self.lbl_rgb_effect, row, 0)
         self.rgb_effect = QComboBox()
         self.rgb_effect.addItem("0")
@@ -292,13 +305,13 @@ class VialRGBHandler(BasicHandler):
         self.rgb_effect.currentIndexChanged.connect(self.on_rgb_effect_changed)
         container.addWidget(self.rgb_effect, row, 1)
 
-        self.lbl_rgb_color = QLabel(tr("RGBConfigurator", "RGB Color"))
+        self.lbl_rgb_color = QLabel()
         container.addWidget(self.lbl_rgb_color, row + 1, 0)
         self.rgb_color = ClickableLabel(" ")
         self.rgb_color.clicked.connect(self.on_rgb_color)
         container.addWidget(self.rgb_color, row + 1, 1)
 
-        self.lbl_rgb_brightness = QLabel(tr("RGBConfigurator", "RGB Brightness"))
+        self.lbl_rgb_brightness = QLabel()
         container.addWidget(self.lbl_rgb_brightness, row + 2, 0)
         self.rgb_brightness = QSlider(QtCore.Qt.Horizontal)
         self.rgb_brightness.setMinimum(0)
@@ -306,7 +319,7 @@ class VialRGBHandler(BasicHandler):
         self.rgb_brightness.valueChanged.connect(self.on_rgb_brightness_changed)
         container.addWidget(self.rgb_brightness, row + 2, 1)
 
-        self.lbl_rgb_speed = QLabel(tr("RGBConfigurator", "RGB Speed"))
+        self.lbl_rgb_speed = QLabel()
         container.addWidget(self.lbl_rgb_speed, row + 3, 0)
         self.rgb_speed = QSlider(QtCore.Qt.Horizontal)
         self.rgb_speed.setMinimum(0)
@@ -318,6 +331,14 @@ class VialRGBHandler(BasicHandler):
                         self.lbl_rgb_color, self.rgb_color, self.lbl_rgb_speed, self.rgb_speed]
 
         self.effects = []
+
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.lbl_rgb_effect.setText(tr("RGBConfigurator", "RGB Effect"))
+        self.lbl_rgb_color.setText(tr("RGBConfigurator", "RGB Color"))
+        self.lbl_rgb_brightness.setText(tr("RGBConfigurator", "RGB Brightness"))
+        self.lbl_rgb_speed.setText(tr("RGBConfigurator", "RGB Speed"))
 
     def on_rgb_brightness_changed(self, value):
         self.keyboard.set_vialrgb_brightness(value)
@@ -404,10 +425,24 @@ class RGBConfigurator(BasicEditor):
         self.addStretch()
         buttons = QHBoxLayout()
         buttons.addStretch()
-        save_btn = QPushButton(tr("RGBConfigurator", "Save"))
-        buttons.addWidget(save_btn)
-        save_btn.clicked.connect(self.on_save)
+        self.btn_save = QPushButton()
+        buttons.addWidget(self.btn_save)
+        self.btn_save.clicked.connect(self.on_save)
         self.addLayout(buttons)
+
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.btn_save.setText(tr("RGBConfigurator", "Save"))
+        for h in self.handlers:
+            if hasattr(h, 'retranslateUi'):
+                h.retranslateUi()
+
+    def changeEvent(self, event):
+        from PyQt5.QtCore import QEvent
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi()
+        super().changeEvent(event)
 
     def on_save(self):
         self.device.keyboard.save_rgb()
