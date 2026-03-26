@@ -10,29 +10,8 @@ from PyQt5.QtWidgets import QWidget, QComboBox, QToolButton, QHBoxLayout, QVBoxL
 import os
 import sys
 
-from about_keyboard import AboutKeyboard
-from autorefresh.autorefresh import Autorefresh
-from editor.alt_repeat_key import AltRepeatKey
-from editor.combos import Combos
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT
-from widgets.editor_container import EditorContainer
-from editor.firmware_flasher import FirmwareFlasher
-from editor.key_override import KeyOverride
-from protocol.keyboard_comm import ProtocolError
-from editor.keymap_editor import KeymapEditor
-from keymaps import KEYMAPS
-from editor.layout_editor import LayoutEditor
-from editor.macro_recorder import MacroRecorder
-from editor.qmk_settings import QmkSettings
-from editor.kbd_settings import KbdSettings
-from editor.rgb_configurator import RGBConfigurator
-from tabbed_keycodes import TabbedKeycodes
-from editor.tap_dance import TapDance
-from unlocker import Unlocker
 from util import tr, EXAMPLE_KEYBOARDS, KeycodeDisplay, EXAMPLE_KEYBOARD_PREFIX
-from vial_device import VialKeyboard
-from editor.matrix_test import MatrixTest
-from protocol.qmk_settings import ProtocolQmkSettings
 import themes
 
 
@@ -41,6 +20,29 @@ class MainWindow(QMainWindow):
     def __init__(self, appctx):
         super().__init__()
         self.appctx = appctx
+
+        # Deferred imports — done here so the app window appears faster
+        from about_keyboard import AboutKeyboard
+        from autorefresh.autorefresh import Autorefresh
+        from editor.alt_repeat_key import AltRepeatKey
+        from editor.combos import Combos
+        from widgets.editor_container import EditorContainer
+        from editor.firmware_flasher import FirmwareFlasher
+        from editor.key_override import KeyOverride
+        from protocol.keyboard_comm import ProtocolError
+        from editor.keymap_editor import KeymapEditor
+        from keymaps import KEYMAPS
+        from editor.layout_editor import LayoutEditor
+        from editor.macro_recorder import MacroRecorder
+        from editor.qmk_settings import QmkSettings
+        from editor.kbd_settings import KbdSettings
+        from editor.rgb_configurator import RGBConfigurator
+        from tabbed_keycodes import TabbedKeycodes
+        from editor.tap_dance import TapDance
+        from unlocker import Unlocker
+        from vial_device import VialKeyboard
+        from editor.matrix_test import MatrixTest
+        from protocol.qmk_settings import ProtocolQmkSettings
 
         self.ui_lock_count = 0
 
