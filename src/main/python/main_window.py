@@ -10,8 +10,29 @@ from PyQt5.QtWidgets import QWidget, QComboBox, QToolButton, QHBoxLayout, QVBoxL
 import os
 import sys
 
+from about_keyboard import AboutKeyboard
+from autorefresh.autorefresh import Autorefresh
+from editor.alt_repeat_key import AltRepeatKey
+from editor.combos import Combos
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT
+from widgets.editor_container import EditorContainer
+from editor.firmware_flasher import FirmwareFlasher
+from editor.key_override import KeyOverride
+from protocol.keyboard_comm import ProtocolError
+from editor.keymap_editor import KeymapEditor
+from keymaps import KEYMAPS
+from editor.layout_editor import LayoutEditor
+from editor.macro_recorder import MacroRecorder
+from editor.qmk_settings import QmkSettings
+from editor.kbd_settings import KbdSettings
+from editor.rgb_configurator import RGBConfigurator
+from tabbed_keycodes import TabbedKeycodes
+from editor.tap_dance import TapDance
+from unlocker import Unlocker
 from util import tr, EXAMPLE_KEYBOARDS, KeycodeDisplay, EXAMPLE_KEYBOARD_PREFIX
+from vial_device import VialKeyboard
+from editor.matrix_test import MatrixTest
+from protocol.qmk_settings import ProtocolQmkSettings
 import themes
 
 
@@ -20,16 +41,6 @@ class MainWindow(QMainWindow):
     def __init__(self, appctx):
         super().__init__()
         self.appctx = appctx
-
-        from about_keyboard import AboutKeyboard
-        from autorefresh.autorefresh import Autorefresh
-        from widgets.editor_container import EditorContainer
-        from protocol.keyboard_comm import ProtocolError
-        from keymaps import KEYMAPS
-        from tabbed_keycodes import TabbedKeycodes
-        from unlocker import Unlocker
-        from vial_device import VialKeyboard
-
 
         self.ui_lock_count = 0
 
@@ -63,14 +74,33 @@ class MainWindow(QMainWindow):
         if sys.platform != "emscripten":
             layout_combobox.addWidget(self.btn_refresh_devices)
 
-        # Editors initialized after window is shown (see _init_editors)
-        self.editors = []
+        self.layout_editor = LayoutEditor()
+        self.keymap_editor = KeymapEditor(self.layout_editor)
+        self.firmware_flasher = FirmwareFlasher(self)
+        self.macro_recorder = MacroRecorder()
+        self.tap_dance = TapDance()
+        self.combos = Combos()
+        self.key_override = KeyOverride()
+        self.alt_repeat_key = AltRepeatKey()
+        ProtocolQmkSettings.initialize(appctx)
+        self.qmk_settings = QmkSettings()
+        self.kbd_settings = KbdSettings()
+        self.matrix_tester = MatrixTest(self.layout_editor)
+        self.rgb_configurator = RGBConfigurator()
+
+        self.editors = [(self.keymap_editor, "Keymap"), (self.layout_editor, "Layout"), (self.macro_recorder, "Macros"),
+                        (self.rgb_configurator, "Lighting"), (self.tap_dance, "Tap Dance"), (self.combos, "Combos"),
+                        (self.key_override, "Key Overrides"), (self.alt_repeat_key, "Alt Repeat Key"),
+                        (self.qmk_settings, "QMK Settings"), (self.kbd_settings, "Keyboard Settings"),
+                        (self.matrix_tester, "Matrix tester"), (self.firmware_flasher, "Firmware updater")]
+
+        Unlocker.global_layout_editor = self.layout_editor
+        Unlocker.global_main_window = self
+
         self.current_tab = None
         self.tabs = QTabWidget()
         self.tabs.currentChanged.connect(self.on_tab_changed)
-        self._appctx = appctx
-        QTimer.singleShot(0, self._init_editors)
-
+        self.refresh_tabs()
 
         no_devices = 'No devices detected. Connect a Vial-compatible device and press "Refresh"<br>' \
                      'or select "File" → "Download VIA definitions" in order to enable support for VIA keyboards.'
@@ -122,58 +152,7 @@ class MainWindow(QMainWindow):
             import vialglue
             QTimer.singleShot(100, vialglue.notify_ready)
 
-    def _init_editors(self):
-        """Deferred editor initialization — called after window is shown for faster startup."""
-        appctx = self._appctx
-        from unlocker import Unlocker
-        from editor.layout_editor import LayoutEditor
-        from editor.keymap_editor import KeymapEditor
-        from editor.firmware_flasher import FirmwareFlasher
-        from editor.macro_recorder import MacroRecorder
-        from editor.tap_dance import TapDance
-        from editor.combos import Combos
-        from editor.key_override import KeyOverride
-        from editor.alt_repeat_key import AltRepeatKey
-        from editor.qmk_settings import QmkSettings
-        from editor.kbd_settings import KbdSettings
-        from editor.matrix_test import MatrixTest
-        from editor.rgb_configurator import RGBConfigurator
-        from protocol.qmk_settings import ProtocolQmkSettings
-
-        self.layout_editor = LayoutEditor()
-        self.keymap_editor = KeymapEditor(self.layout_editor)
-        self.firmware_flasher = FirmwareFlasher(self)
-        self.macro_recorder = MacroRecorder()
-        self.tap_dance = TapDance()
-        self.combos = Combos()
-        self.key_override = KeyOverride()
-        self.alt_repeat_key = AltRepeatKey()
-        ProtocolQmkSettings.initialize(appctx)
-        self.qmk_settings = QmkSettings()
-        self.kbd_settings = KbdSettings()
-        self.matrix_tester = MatrixTest(self.layout_editor)
-        self.rgb_configurator = RGBConfigurator()
-
-        self.editors = [(self.keymap_editor, "Keymap"), (self.layout_editor, "Layout"), (self.macro_recorder, "Macros"),
-                        (self.rgb_configurator, "Lighting"), (self.tap_dance, "Tap Dance"), (self.combos, "Combos"),
-                        (self.key_override, "Key Overrides"), (self.alt_repeat_key, "Alt Repeat Key"),
-                        (self.qmk_settings, "QMK Settings"), (self.kbd_settings, "Keyboard Settings"),
-                        (self.matrix_tester, "Matrix tester"), (self.firmware_flasher, "Firmware updater")]
-
-        Unlocker.global_layout_editor = self.layout_editor
-        Unlocker.global_main_window = self
-
-        self.current_tab = None
-        self.tabs = QTabWidget()
-        self.tabs.currentChanged.connect(self.on_tab_changed)
-        self.refresh_tabs()
-
-        # Now that editors are ready, start autorefresh
-        self.autorefresh.start()
-
-
     def init_menu(self):
-        from keymaps import KEYMAPS
         self.act_layout_load = QAction(self)
         self.act_layout_load.setShortcut("Ctrl+O")
         self.act_layout_load.triggered.connect(self.on_layout_load)
@@ -495,7 +474,6 @@ class MainWindow(QMainWindow):
             self.autorefresh.current_device.keyboard.reset()
 
     def change_keyboard_layout(self, index):
-        from keymaps import KEYMAPS
         self.settings.setValue("keymap", KEYMAPS[index][0])
         KeycodeDisplay.set_keymap_override(KEYMAPS[index][1])
 
