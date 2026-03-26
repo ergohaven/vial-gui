@@ -53,15 +53,27 @@ class MacroRecorder(BasicEditor):
         buttons = QHBoxLayout()
         buttons.addWidget(self.lbl_memory)
         buttons.addStretch()
-        self.btn_save = QPushButton(tr("MacroRecorder", "Save"))
+        self.btn_save = QPushButton()
         self.btn_save.clicked.connect(self.on_save)
-        btn_revert = QPushButton(tr("MacroRecorder", "Revert"))
-        btn_revert.clicked.connect(self.on_revert)
+        self.btn_revert = QPushButton()
+        self.btn_revert.clicked.connect(self.on_revert)
         buttons.addWidget(self.btn_save)
-        buttons.addWidget(btn_revert)
+        buttons.addWidget(self.btn_revert)
 
         self.addWidget(self.tabs)
         self.addLayout(buttons)
+
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.btn_save.setText(tr("MacroRecorder", "Save"))
+        self.btn_revert.setText(tr("MacroRecorder", "Revert"))
+
+    def changeEvent(self, event):
+        from PyQt5.QtCore import QEvent
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi()
+        super().changeEvent(event)
 
     def valid(self):
         return isinstance(self.device, VialKeyboard)
