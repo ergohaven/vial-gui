@@ -21,6 +21,8 @@ class ComboEntryUI(QObject):
         self.idx = idx
         self.container = QGridLayout()
         self.kc_inputs = []
+        self.lbl_keys = []
+        self.lbl_output = QLabel()
         self.populate_container()
 
         w = QWidget()
@@ -32,18 +34,27 @@ class ComboEntryUI(QObject):
         self.w2 = QWidget()
         self.w2.setLayout(l)
 
+        self.retranslateUi()
+
     def populate_container(self):
         for x in range(4):
+            lbl = QLabel()
+            self.lbl_keys.append(lbl)
             kc_widget = KeyWidget()
             kc_widget.changed.connect(self.on_key_changed)
-            self.container.addWidget(QLabel(tr("Combos", "Key {}").format(x + 1)), x, 0)
+            self.container.addWidget(lbl, x, 0)
             self.container.addWidget(kc_widget, x, 1)
             self.kc_inputs.append(kc_widget)
 
         self.kc_output = KeyWidget()
         self.kc_output.changed.connect(self.on_key_changed)
-        self.container.addWidget(QLabel(tr("Combos", "Output key")), 4, 0)
+        self.container.addWidget(self.lbl_output, 4, 0)
         self.container.addWidget(self.kc_output, 4, 1)
+
+    def retranslateUi(self):
+        for x, lbl in enumerate(self.lbl_keys):
+            lbl.setText(tr("Combos", "Key {}").format(x + 1))
+        self.lbl_output.setText(tr("Combos", "Output key"))
 
     def widget(self):
         return self.w2
@@ -90,6 +101,16 @@ class Combos(BasicEditor):
             self.combo_entries_available.append(entry)
 
         self.addWidget(self.tabs)
+
+    def retranslateUi(self):
+        for entry in self.combo_entries_available:
+            entry.retranslateUi()
+
+    def changeEvent(self, event):
+        from PyQt5.QtCore import QEvent
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi()
+        super().changeEvent(event)
 
     def rebuild_ui(self):
         while self.tabs.count() > 0:
