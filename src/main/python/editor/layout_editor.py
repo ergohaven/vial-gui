@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QLabel, QCheckBox, QComboBox, QGridLayout, QWidget, 
 from editor.basic_editor import BasicEditor
 from widgets.keyboard_widget import KeyboardWidget
 from vial_device import VialKeyboard
+from util import tr
 
 
 class BooleanChoice:
@@ -13,14 +14,19 @@ class BooleanChoice:
     def __init__(self, cb, container, label):
         self.cb = cb
         self.choice = False
+        self.label_key = label
 
-        self.widget_label = QLabel(label)
+        self.widget_label = QLabel()
         self.widget_checkbox = QCheckBox()
         self.widget_checkbox.stateChanged.connect(self.on_checkbox)
 
         row = container.rowCount()
         container.addWidget(self.widget_label, row, 0)
         container.addWidget(self.widget_checkbox, row, 1)
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.widget_label.setText(tr("LayoutLabel", self.label_key))
 
     def delete(self):
         self.widget_label.hide()
@@ -49,8 +55,9 @@ class SelectChoice:
         self.cb = cb
         self.choice = 0
         self.options = options
+        self.label_key = label
 
-        self.widget_label = QLabel(label)
+        self.widget_label = QLabel()
         self.widget_options = QComboBox()
         self.widget_options.addItems(options)
         self.widget_options.currentIndexChanged.connect(self.on_selection)
@@ -58,6 +65,10 @@ class SelectChoice:
         row = container.rowCount()
         container.addWidget(self.widget_label, row, 0)
         container.addWidget(self.widget_options, row, 1)
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.widget_label.setText(tr("LayoutLabel", self.label_key))
 
     def delete(self):
         self.widget_label.hide()
@@ -164,6 +175,11 @@ class LayoutEditor(BasicEditor):
 
     def get_choice(self, index):
         return int(self.choices[index].pack(), 2)
+
+    def retranslateUi(self):
+        for choice in self.choices:
+            if hasattr(choice, 'retranslateUi'):
+                choice.retranslateUi()
 
     def on_changed(self):
         self.changed.emit()
