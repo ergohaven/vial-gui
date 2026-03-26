@@ -9,6 +9,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Compile translations
+      run: |
+        sudo apt-get install -y qttools5-dev-tools
+        lrelease src/main/resources/base/i18n/vial_ru.ts -qm src/main/resources/base/i18n/vial_ru.qm
+
     - name: Build
       run: ./util/linux-builder/build-in-docker.sh
 
@@ -79,6 +84,16 @@ jobs:
         Invoke-WebRequest -Uri "https://download.microsoft.com/download/3/2/2/3224B87F-CFA0-4E70-BDA3-3DE650EFEBA5/vcredist_x64.exe" -OutFile "vcredist_x64.exe"
         Start-Process -FilePath "vcredist_x64.exe" -ArgumentList "/install", "/quiet", "/norestart" -Wait
         Remove-Item "vcredist_x64.exe"
+
+    - name: Compile translations
+      run: |
+        pip install pyqt5
+        python -c "
+import subprocess, sys, os
+from PyQt5.QtCore import QLibraryInfo
+lrelease = os.path.join(QLibraryInfo.location(QLibraryInfo.BinariesPath), 'lrelease.exe')
+subprocess.run([lrelease, 'src/main/resources/base/i18n/vial_ru.ts', '-qm', 'src/main/resources/base/i18n/vial_ru.qm'], check=True)
+"
 
     - name: Build
       run: |
