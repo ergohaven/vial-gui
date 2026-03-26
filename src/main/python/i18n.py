@@ -73,3 +73,22 @@ def install_translator(app, locale=None):
 
     if _translator.load("vial_ru", ":/i18n"):
         app.installTranslator(_translator)
+
+def install_translator_web(app):
+    """For WASM/web: use locale passed from JS bridge via env vars.
+    Priority: user's explicit choice > browser language > English."""
+    import os
+    lang_pref = os.environ.get("VIAL_BROWSER_LANG_PREF", LANG_AUTO)
+    browser_locale = os.environ.get("VIAL_BROWSER_LOCALE", "")
+
+    if lang_pref == LANG_AUTO:
+        # No explicit user choice — use browser language
+        locale = browser_locale
+    elif lang_pref:
+        locale = lang_pref
+    else:
+        # User explicitly chose English
+        return
+
+    if locale:
+        install_translator(app, locale)
