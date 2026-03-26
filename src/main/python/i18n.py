@@ -23,6 +23,16 @@ def save_language(locale_code):
     settings = QSettings("Vial", "Vial")
     settings.setValue(SETTINGS_KEY, locale_code)
 
+def switch_language(app, locale_code):
+    """Switch application language at runtime without restart."""
+    global _translator
+    save_language(locale_code)
+    if _translator is not None:
+        app.removeTranslator(_translator)
+        _translator = None
+    if locale_code:
+        install_translator(app, locale_code)
+
 def install_translator(app, locale=None):
     """Install translator based on locale or saved preference."""
     global _translator
