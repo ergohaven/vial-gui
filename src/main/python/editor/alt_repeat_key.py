@@ -72,9 +72,9 @@ class OptionsUI(QWidget):
 
         container = QVBoxLayout()
 
-        self.opt_default_to_this_alt_key = CheckBoxNoPadding(tr("AltRepeatKey", "Default to this alt key"))
-        self.opt_bidirectional = CheckBoxNoPadding(tr("AltRepeatKey", "Bidirectional"))
-        self.opt_ignore_mod_handedness = CheckBoxNoPadding(tr("AltRepeatKey", "Ignore mod handedness"))
+        self.opt_default_to_this_alt_key = CheckBoxNoPadding("")
+        self.opt_bidirectional = CheckBoxNoPadding("")
+        self.opt_ignore_mod_handedness = CheckBoxNoPadding("")
 
         for w in [self.opt_default_to_this_alt_key, self.opt_bidirectional,
                   self.opt_ignore_mod_handedness]:
@@ -82,6 +82,18 @@ class OptionsUI(QWidget):
             container.addWidget(w)
 
         self.setLayout(container)
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.opt_default_to_this_alt_key.setText(tr("AltRepeatKey", "Default to this alt key"))
+        self.opt_bidirectional.setText(tr("AltRepeatKey", "Bidirectional"))
+        self.opt_ignore_mod_handedness.setText(tr("AltRepeatKey", "Ignore mod handedness"))
+
+    def changeEvent(self, event):
+        from PyQt5.QtCore import QEvent
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi()
+        super().changeEvent(event)
 
     def on_change(self):
         self.changed.emit()
@@ -120,6 +132,11 @@ class AltRepeatKeyEntryUI(QObject):
 
         self.idx = idx
         self.container = QGridLayout()
+        self.lbl_enable = QLabel()
+        self.lbl_last_key = QLabel()
+        self.lbl_alt_key = QLabel()
+        self.lbl_allowed_mods = QLabel()
+        self.lbl_options = QLabel()
         self.populate_container()
 
         w = QWidget()
@@ -130,21 +147,30 @@ class AltRepeatKeyEntryUI(QObject):
         l.setAlignment(w, QtCore.Qt.AlignHCenter)
         self.w2 = make_scrollable(l)
 
+        self.retranslateUi()
+
     def populate_container(self):
-        self.container.addWidget(QLabel(tr("AltRepeatKey", "Enable")), 0, 0)
+        self.container.addWidget(self.lbl_enable, 0, 0)
         self.container.addWidget(self.enable_chk, 0, 1)
 
-        self.container.addWidget(QLabel(tr("AltRepeatKey", "Last key")), 2, 0)
+        self.container.addWidget(self.lbl_last_key, 2, 0)
         self.container.addWidget(self.last_key, 2, 1)
 
-        self.container.addWidget(QLabel(tr("AltRepeatKey", "Alt key")), 3, 0)
+        self.container.addWidget(self.lbl_alt_key, 3, 0)
         self.container.addWidget(self.alt_key, 3, 1)
 
-        self.container.addWidget(QLabel(tr("AltRepeatKey", "Allowed mods")), 4, 0)
+        self.container.addWidget(self.lbl_allowed_mods, 4, 0)
         self.container.addWidget(self.allowed_mods, 4, 1)
 
-        self.container.addWidget(QLabel(tr("AltRepeatKey", "Options")), 5, 0)
+        self.container.addWidget(self.lbl_options, 5, 0)
         self.container.addWidget(self.options, 5, 1)
+
+    def retranslateUi(self):
+        self.lbl_enable.setText(tr("AltRepeatKey", "Enable"))
+        self.lbl_last_key.setText(tr("AltRepeatKey", "Last key"))
+        self.lbl_alt_key.setText(tr("AltRepeatKey", "Alt key"))
+        self.lbl_allowed_mods.setText(tr("AltRepeatKey", "Allowed mods"))
+        self.lbl_options.setText(tr("AltRepeatKey", "Options"))
 
     def widget(self):
         return self.w2
@@ -190,6 +216,17 @@ class AltRepeatKey(BasicEditor):
             self.alt_repeat_key_entries_available.append(entry)
 
         self.addWidget(self.tabs)
+
+    def retranslateUi(self):
+        for entry in self.alt_repeat_key_entries_available:
+            entry.retranslateUi()
+            entry.options.retranslateUi()
+
+    def changeEvent(self, event):
+        from PyQt5.QtCore import QEvent
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi()
+        super().changeEvent(event)
 
     def rebuild_ui(self):
         while self.tabs.count() > 0:
