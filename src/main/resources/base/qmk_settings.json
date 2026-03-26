@@ -1,334 +1,80 @@
 {
     "tabs": [
         {
-            "name": "Магия",
+            "name": "Magic",
             "fields": [
-                {
-                    "type": "boolean",
-                    "title": "Поменять Caps Lock и левый Control",
-                    "qsid": 21,
-                    "width": 4,
-                    "bit": 0
-                },
-                {
-                    "type": "boolean",
-                    "title": "Использовать Caps Lock как Control",
-                    "qsid": 21,
-                    "width": 4,
-                    "bit": 1
-                },
-                {
-                    "type": "boolean",
-                    "title": "Поменять левый Alt и GUI",
-                    "qsid": 21,
-                    "width": 4,
-                    "bit": 2
-                },
-                {
-                    "type": "boolean",
-                    "title": "Поменять правый Alt и GUI",
-                    "qsid": 21,
-                    "width": 4,
-                    "bit": 3
-                },
-                {
-                    "type": "boolean",
-                    "title": "Отключить клавиши GUI",
-                    "qsid": 21,
-                    "width": 4,
-                    "bit": 4
-                },
-                {
-                    "type": "boolean",
-                    "title": "Поменять ` и Escape",
-                    "qsid": 21,
-                    "width": 4,
-                    "bit": 5
-                },
-                {
-                    "type": "boolean",
-                    "title": "Поменять \\ и Backspace",
-                    "qsid": 21,
-                    "width": 4,
-                    "bit": 6
-                },
-                {
-                    "type": "boolean",
-                    "title": "Включить N-key rollover",
-                    "qsid": 21,
-                    "width": 4,
-                    "bit": 7
-                },
-                {
-                    "type": "boolean",
-                    "title": "Поменять левый Control и GUI",
-                    "qsid": 21,
-                    "width": 4,
-                    "bit": 8
-                },
-                {
-                    "type": "boolean",
-                    "title": "Поменять правый Control и GUI",
-                    "qsid": 21,
-                    "width": 4,
-                    "bit": 9
-                }
+                { "type": "boolean", "title": "Swap Caps Lock and Left Control", "qsid": 21, "width": 4, "bit": 0 },
+                { "type": "boolean", "title": "Treat Caps Lock as Control", "qsid": 21, "width": 4, "bit": 1 },
+                { "type": "boolean", "title": "Swap Left Alt and GUI", "qsid": 21, "width": 4, "bit": 2 },
+                { "type": "boolean", "title": "Swap Right Alt and GUI", "qsid": 21, "width": 4, "bit": 3 },
+                { "type": "boolean", "title": "Disable the GUI keys", "qsid": 21, "width": 4, "bit": 4 },
+                { "type": "boolean", "title": "Swap ` and Escape", "qsid": 21, "width": 4, "bit": 5 },
+                { "type": "boolean", "title": "Swap \\ and Backspace", "qsid": 21, "width": 4, "bit": 6 },
+                { "type": "boolean", "title": "Enable N-key rollover", "qsid": 21, "width": 4, "bit": 7 },
+                { "type": "boolean", "title": "Swap Left Control and GUI", "qsid": 21, "width": 4, "bit": 8 },
+                { "type": "boolean", "title": "Swap Right Control and GUI", "qsid": 21, "width": 4, "bit": 9 }
             ]
         },
         {
             "name": "Grave Escape",
             "fields": [
-                {
-                    "type": "boolean",
-                    "title": "Всегда отправлять Escape при нажатии Alt",
-                    "qsid": 1,
-                    "bit": 0
-                },
-                {
-                    "type": "boolean",
-                    "title": "Всегда отправлять Escape при нажатии Control",
-                    "qsid": 1,
-                    "bit": 1
-                },
-                {
-                    "type": "boolean",
-                    "title": "Всегда отправлять Escape при нажатии GUI",
-                    "qsid": 1,
-                    "bit": 2
-                },
-                {
-                    "type": "boolean",
-                    "title": "Всегда отправлять Escape при нажатии Shift",
-                    "qsid": 1,
-                    "bit": 3
-                }
+                { "type": "boolean", "title": "Always send Escape if Alt is pressed", "qsid": 1, "bit": 0 },
+                { "type": "boolean", "title": "Always send Escape if Control is pressed", "qsid": 1, "bit": 1 },
+                { "type": "boolean", "title": "Always send Escape if GUI is pressed", "qsid": 1, "bit": 2 },
+                { "type": "boolean", "title": "Always send Escape if Shift is pressed", "qsid": 1, "bit": 3 }
             ]
         },
         {
-            "name": "Тап-удержание",
+            "name": "Tap-Hold",
             "fields": [
-                {
-                    "type": "integer",
-                    "title": "Время нажатия (мс)",
-                    "qsid": 7,
-                    "min": 0,
-                    "max": 10000,
-                    "width": 2
-                },
-                {
-                    "type": "boolean",
-                    "title": "Разрешительное удержание",
-                    "qsid": 8,
-                    "bit": 0
-                },
-                {
-                    "type": "boolean",
-                    "title": "Игнорировать прерывание Mod Tap",
-                    "qsid": 8,
-                    "bit": 1
-                },
-                {
-                    "type": "boolean",
-                    "title": "Принудительное удержание при тапе",
-                    "qsid": 8,
-                    "bit": 2
-                },
-                {
-                    "type": "boolean",
-                    "title": "Ретро-тап",
-                    "qsid": 8,
-                    "bit": 3
-                },
-                {
-                    "type": "integer",
-                    "title": "Задержка кода тапа (мс)",
-                    "qsid": 18,
-                    "min": 0,
-                    "max": 1000,
-                    "width": 2
-                },
-                {
-                    "type": "integer",
-                    "title": "Задержка Caps при тап-удержании (мс)",
-                    "qsid": 19,
-                    "min": 0,
-                    "max": 1000,
-                    "width": 2
-                },
-                {
-                    "type": "integer",
-                    "title": "Переключение тапом",
-                    "qsid": 20,
-                    "min": 0,
-                    "max": 100,
-                    "width": 1
-                }
+                { "type": "integer", "title": "Tapping Term", "qsid": 7, "min": 0, "max": 10000, "width": 2 },
+                { "type": "boolean", "title": "Permissive Hold", "qsid": 8, "bit": 0 },
+                { "type": "boolean", "title": "Ignore Mod Tap Interrupt", "qsid": 8, "bit": 1 },
+                { "type": "boolean", "title": "Tapping Force Hold", "qsid": 8, "bit": 2 },
+                { "type": "boolean", "title": "Retro Tapping", "qsid": 8, "bit": 3 },
+                { "type": "integer", "title": "Tap Code Delay", "qsid": 18, "min": 0, "max": 1000, "width": 2 },
+                { "type": "integer", "title": "Tap Hold Caps Delay", "qsid": 19, "min": 0, "max": 1000, "width": 2 },
+                { "type": "integer", "title": "Tapping Toggle", "qsid": 20, "min": 0, "max": 100, "width": 1 }
             ]
         },
         {
-            "name": "Авто Shift",
+            "name": "Auto Shift",
             "fields": [
-                {
-                    "type": "boolean",
-                    "title": "Включить",
-                    "qsid": 3,
-                    "bit": 0
-                },
-                {
-                    "type": "boolean",
-                    "title": "Включить для модификаторов",
-                    "qsid": 3,
-                    "bit": 1
-                },
-                {
-                    "type": "integer",
-                    "title": "Таймаут (мс)",
-                    "qsid": 4,
-                    "min": 0,
-                    "max": 1000,
-                    "width": 2
-                },
-                {
-                    "type": "boolean",
-                    "title": "Не применять к спецклавишам",
-                    "qsid": 3,
-                    "bit": 2
-                },
-                {
-                    "type": "boolean",
-                    "title": "Не применять к цифрам",
-                    "qsid": 3,
-                    "bit": 3
-                },
-                {
-                    "type": "boolean",
-                    "title": "Не применять к буквам",
-                    "qsid": 3,
-                    "bit": 4
-                },
-                {
-                    "type": "boolean",
-                    "title": "Включить повтор клавиш",
-                    "qsid": 3,
-                    "bit": 5
-                },
-                {
-                    "type": "boolean",
-                    "title": "Отключить повтор при превышении таймаута",
-                    "qsid": 3,
-                    "bit": 6
-                }
+                { "type": "boolean", "title": "Enable", "qsid": 3, "bit": 0 },
+                { "type": "boolean", "title": "Enable for modifiers", "qsid": 3, "bit": 1 },
+                { "type": "integer", "title": "Timeout", "qsid": 4, "min": 0, "max": 1000, "width": 2 },
+                { "type": "boolean", "title": "Do not Auto Shift special keys", "qsid": 3, "bit": 2 },
+                { "type": "boolean", "title": "Do not Auto Shift numeric keys", "qsid": 3, "bit": 3 },
+                { "type": "boolean", "title": "Do not Auto Shift alpha characters", "qsid": 3, "bit": 4 },
+                { "type": "boolean", "title": "Enable keyrepeat", "qsid": 3, "bit": 5 },
+                { "type": "boolean", "title": "Disable keyrepeat when timeout is exceeded", "qsid": 3, "bit": 6 }
             ]
         },
         {
-            "name": "Комбо",
+            "name": "Combo",
             "fields": [
-                {
-                    "type": "integer",
-                    "title": "Таймаут комбинаций (мс)",
-                    "qsid": 2,
-                    "min": 0,
-                    "max": 10000,
-                    "width": 2
-                }
+                { "type": "integer", "title": "Time out period for combos", "qsid": 2, "min": 0, "max": 10000, "width": 2 }
             ]
         },
         {
-            "name": "Одиночные клавиши",
+            "name": "One Shot Keys",
             "fields": [
-                {
-                    "type": "integer",
-                    "title": "Количество нажатий для фиксации клавиши",
-                    "qsid": 5,
-                    "min": 0,
-                    "max": 50,
-                    "width": 1
-                },
-                {
-                    "type": "integer",
-                    "title": "Время удержания одиночной клавиши (мс)",
-                    "qsid": 6,
-                    "min": 0,
-                    "max": 60000,
-                    "width": 2
-                }
+                { "type": "integer", "title": "Tapping this number of times holds the key until tapped once again", "qsid": 5, "min": 0, "max": 50, "width": 1 },
+                { "type": "integer", "title": "Time (in ms) before the one shot key is released", "qsid": 6, "min": 0, "max": 60000, "width": 2 }
             ]
         },
         {
-            "name": "Клавиши мыши",
+            "name": "Mouse keys",
             "fields": [
-                {
-                    "type": "integer",
-                    "title": "Задержка перед началом движения курсора (мс)",
-                    "qsid": 9,
-                    "min": 0,
-                    "max": 10000,
-                    "width": 2
-                },
-                {
-                    "type": "integer",
-                    "title": "Интервал между шагами курсора (мс)",
-                    "qsid": 10,
-                    "min": 0,
-                    "max": 10000,
-                    "width": 2
-                },
-                {
-                    "type": "integer",
-                    "title": "Размер шага",
-                    "qsid": 11,
-                    "min": 0,
-                    "max": 1000,
-                    "width": 2
-                },
-                {
-                    "type": "integer",
-                    "title": "Максимальная скорость курсора",
-                    "qsid": 12,
-                    "min": 0,
-                    "max": 1000,
-                    "width": 2
-                },
-                {
-                    "type": "integer",
-                    "title": "Время разгона курсора (мс)",
-                    "qsid": 13,
-                    "min": 0,
-                    "max": 1000,
-                    "width": 2
-                },
-                {
-                    "type": "integer",
-                    "title": "Задержка перед прокруткой (мс)",
-                    "qsid": 14,
-                    "min": 0,
-                    "max": 10000,
-                    "width": 2
-                },
-                {
-                    "type": "integer",
-                    "title": "Интервал прокрутки (мс)",
-                    "qsid": 15,
-                    "min": 0,
-                    "max": 10000,
-                    "width": 2
-                },
-                {
-                    "type": "integer",
-                    "title": "Максимальное количество шагов прокрутки",
-                    "qsid": 16,
-                    "min": 0,
-                    "max": 1000,
-                    "width": 2
-                },
-                {
-                    "type": "integer",
-                    "title": "Время разгона прокрутки (мс)",
-                    "qsid": 17,
-                    "min": 0,
-                    "max": 1000,
-                    "width": 2
-                }
+                { "type": "integer", "title": "Delay between pressing a movement key and cursor movement", "qsid": 9, "min": 0, "max": 10000, "width": 2 },
+                { "type": "integer", "title": "Time between cursor movements in milliseconds", "qsid": 10, "min": 0, "max": 10000, "width": 2 },
+                { "type": "integer", "title": "Step size", "qsid": 11, "min": 0, "max": 1000, "width": 2 },
+                { "type": "integer", "title": "Maximum cursor speed at which acceleration stops", "qsid": 12, "min": 0, "max": 1000, "width": 2 },
+                { "type": "integer", "title": "Time until maximum cursor speed is reached", "qsid": 13, "min": 0, "max": 1000, "width": 2 },
+                { "type": "integer", "title": "Delay between pressing a wheel key and wheel movement", "qsid": 14, "min": 0, "max": 10000, "width": 2 },
+                { "type": "integer", "title": "Time between wheel movements", "qsid": 15, "min": 0, "max": 10000, "width": 2 },
+                { "type": "integer", "title": "Maximum number of scroll steps per scroll action", "qsid": 16, "min": 0, "max": 1000, "width": 2 },
+                { "type": "integer", "title": "Time until maximum scroll speed is reached", "qsid": 17, "min": 0, "max": 1000, "width": 2 }
             ]
         }
     ]
