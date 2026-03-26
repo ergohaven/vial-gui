@@ -22,3 +22,7 @@ class BasicEditor(QVBoxLayout):
 
     def deactivate(self):
         pass
+
+    def retranslateUi(self):
+        """Override in subclasses to update translatable strings on language change."""
+        pass
