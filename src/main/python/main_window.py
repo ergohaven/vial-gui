@@ -495,6 +495,7 @@ class MainWindow(QMainWindow):
             self.autorefresh.current_device.keyboard.reset()
 
     def change_keyboard_layout(self, index):
+        from keymaps import KEYMAPS
         self.settings.setValue("keymap", KEYMAPS[index][0])
         KeycodeDisplay.set_keymap_override(KEYMAPS[index][1])
 
