@@ -23,8 +23,16 @@ def get_saved_language():
 
 def save_language(locale_code):
     """Save language preference. Pass '' to explicitly select English."""
+    import sys
     settings = QSettings("Vial", "Vial")
     settings.setValue(SETTINGS_KEY, locale_code)
+    # On WASM, also persist to localStorage via JS bridge
+    if sys.platform == "emscripten":
+        try:
+            from vialglue import send_js_message
+            send_js_message("save_language", locale_code)
+        except Exception:
+            pass
 
 def switch_language(app, locale_code):
     """Switch application language at runtime without restart."""
