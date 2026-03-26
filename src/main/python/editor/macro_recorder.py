@@ -68,11 +68,10 @@ class MacroRecorder(BasicEditor):
     def retranslateUi(self):
         self.btn_save.setText(tr("MacroRecorder", "Save"))
         self.btn_revert.setText(tr("MacroRecorder", "Revert"))
-        # retranslate all macro tab buttons
-        for i in range(self.tabs.count()):
-            w = self.tabs.widget(i)
-            if hasattr(w, 'retranslateUi'):
-                w.retranslateUi()
+        # retranslate all macro tab layouts (stored separately)
+        for tab in self.macro_tabs:
+            if hasattr(tab, 'retranslateUi'):
+                tab.retranslateUi()
 
     def changeEvent(self, event):
         from PyQt5.QtCore import QEvent
