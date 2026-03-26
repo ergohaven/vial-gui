@@ -26,8 +26,12 @@ class GenericOption(QObject):
         self.qsid = self.option["qsid"]
         self.container = container
 
-        self.lbl = QLabel(tr("QmkSettingsField", option["title"]))
+        self.lbl = QLabel()
         self.container.addWidget(self.lbl, self.row, 0)
+        self.retranslateUi()
+
+    def retranslateUi(self):
+        self.lbl.setText(tr("QmkSettingsField", self.option["title"]))
 
     def reload(self, keyboard):
         return keyboard.settings.get(self.qsid)
