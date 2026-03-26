@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, QEvent
 
 
 class EditorContainer(QWidget):
@@ -16,3 +16,9 @@ class EditorContainer(QWidget):
 
     def mousePressEvent(self, ev):
         self.clicked.emit()
+
+    def changeEvent(self, event):
+        if event.type() == QEvent.LanguageChange:
+            if hasattr(self.editor, 'retranslateUi'):
+                self.editor.retranslateUi()
+        super().changeEvent(event)
