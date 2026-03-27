@@ -2,7 +2,7 @@
 import json
 import os
 
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QMessageBox, QWidget, QInputDialog, QApplication
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QMessageBox, QWidget, QInputDialog
 from PyQt5.QtCore import Qt, pyqtSignal, QStandardPaths
 
 
@@ -139,9 +139,8 @@ class KeymapEditor(BasicEditor):
 
     def rename_layer(self, idx):
         current = self.get_layer_name(idx)
-        parent_widget = QApplication.activeWindow()
         new_name, ok = QInputDialog.getText(
-            parent_widget, tr("KeymapEditor", "Rename Layer"),
+            self, tr("KeymapEditor", "Rename Layer"),
             tr("KeymapEditor", "Layer {} name:").format(idx),
             text=current
         )
