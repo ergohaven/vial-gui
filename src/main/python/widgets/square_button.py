@@ -16,7 +16,12 @@ class SquareButton(QPushButton):
 
     def mouseDoubleClickEvent(self, event):
         self.double_clicked.emit()
-        super().mouseDoubleClickEvent(event)
+        event.accept()
+
+    def contextMenuEvent(self, event):
+        """ Right-click also triggers rename """
+        self.double_clicked.emit()
+        event.accept()
 
     def setRelSize(self, ratio):
         self.scale = ratio
