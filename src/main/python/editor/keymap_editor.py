@@ -3,17 +3,12 @@ import json
 import os
 
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QMessageBox, QWidget, QInputDialog
-from PyQt5.QtCore import Qt, pyqtSignal, QStandardPaths
+from PyQt5.QtCore import Qt, pyqtSignal
 
 
 def get_layer_names_file():
-    """ Returns cross-platform path to layer names file.
-        Uses Qt's AppConfigLocation — same place vial stores QSettings.
-        Windows: %APPDATA%/Vial/Vial/
-        Linux:   ~/.config/Vial/Vial/
-        macOS:   ~/Library/Preferences/Vial/
-    """
-    config_dir = QStandardPaths.writableLocation(QStandardPaths.AppConfigLocation)
+    """ Returns path to layer names file, stored alongside vial config """
+    config_dir = os.path.expanduser("~/.config/vial")
     os.makedirs(config_dir, exist_ok=True)
     return os.path.join(config_dir, "layer_names.json")
 
