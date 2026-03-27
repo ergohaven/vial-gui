@@ -6,23 +6,20 @@ from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QMessageBox, QWidg
 from PyQt5.QtCore import Qt, pyqtSignal
 
 
-def get_layer_names_file():
-    """ Returns path to layer names file, stored alongside vial config """
-    config_dir = os.path.expanduser("~/.config/vial")
-    os.makedirs(config_dir, exist_ok=True)
-    return os.path.join(config_dir, "layer_names.json")
+LAYER_NAMES_FILE = os.path.expanduser("~/.config/vial/layer_names.json")
 
 
-def load_all_layer_names():
+def load_layer_names():
     try:
-        with open(get_layer_names_file(), "r", encoding="utf-8") as f:
+        with open(LAYER_NAMES_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
     except Exception:
         return {}
 
 
-def save_all_layer_names(data):
-    with open(get_layer_names_file(), "w", encoding="utf-8") as f:
+def save_layer_names(data):
+    os.makedirs(os.path.dirname(LAYER_NAMES_FILE), exist_ok=True)
+    with open(LAYER_NAMES_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 from any_keycode_dialog import AnyKeycodeDialog
@@ -117,20 +114,17 @@ class KeymapEditor(BasicEditor):
             return "unknown"
 
     def get_layer_name(self, idx):
-        all_names = load_all_layer_names()
+        names = load_layer_names()
         uid = self.get_keyboard_uid()
-        return all_names.get(uid, {}).get(str(idx), str(idx))
+        return names.get(uid, {}).get(str(idx), str(idx))
 
     def set_layer_name(self, idx, name):
-        all_names = load_all_layer_names()
+        names = load_layer_names()
         uid = self.get_keyboard_uid()
-        if uid not in all_names:
-            all_names[uid] = {}
-        if name:
-            all_names[uid][str(idx)] = name
-        elif str(idx) in all_names.get(uid, {}):
-            del all_names[uid][str(idx)]
-        save_all_layer_names(all_names)
+        if uid not in names:
+            names[uid] = {}
+        names[uid][str(idx)] = name
+        save_layer_names(names)
 
     def rename_layer(self, idx):
         current = self.get_layer_name(idx)
@@ -139,9 +133,16 @@ class KeymapEditor(BasicEditor):
             tr("KeymapEditor", "Layer {} name:").format(idx),
             text=current
         )
-        if ok:
+        if ok and new_name.strip() != "":
             self.set_layer_name(idx, new_name.strip())
-            self.rebuild_layers()
+        elif ok:
+            # Empty → reset to default (number)
+            names = load_layer_names()
+            uid = self.get_keyboard_uid()
+            if uid in names and str(idx) in names[uid]:
+                del names[uid][str(idx)]
+                save_layer_names(names)
+        self.rebuild_layers()
 
     def rebuild_layers(self):
         # delete old layer labels
