@@ -9,14 +9,15 @@ class SquareButton(QPushButton):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.scale = 1.2
-        self.label = None
-        self.word_wrap = False
-        self.text = ""
 
     def mouseDoubleClickEvent(self, event):
         self.double_clicked.emit()
         super().mouseDoubleClickEvent(event)
+
+        self.scale = 1.2
+        self.label = None
+        self.word_wrap = False
+        self.text = ""
 
     def setRelSize(self, ratio):
         self.scale = ratio
