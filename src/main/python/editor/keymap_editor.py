@@ -1,26 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 import json
-import os
 
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QMessageBox, QWidget, QInputDialog
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QMessageBox, QWidget
 from PyQt5.QtCore import Qt, pyqtSignal
-
-
-LAYER_NAMES_FILE = os.path.expanduser("~/.config/vial/layer_names.json")
-
-
-def load_layer_names():
-    try:
-        with open(LAYER_NAMES_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception:
-        return {}
-
-
-def save_layer_names(data):
-    os.makedirs(os.path.dirname(LAYER_NAMES_FILE), exist_ok=True)
-    with open(LAYER_NAMES_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
 
 from any_keycode_dialog import AnyKeycodeDialog
 from editor.basic_editor import BasicEditor
@@ -107,43 +89,6 @@ class KeymapEditor(BasicEditor):
     def on_keycode_changed(self, code):
         self.set_key(code)
 
-    def get_keyboard_uid(self):
-        try:
-            return str(self.keyboard.keyboard_id)
-        except Exception:
-            return "unknown"
-
-    def get_layer_name(self, idx):
-        names = load_layer_names()
-        uid = self.get_keyboard_uid()
-        return names.get(uid, {}).get(str(idx), str(idx))
-
-    def set_layer_name(self, idx, name):
-        names = load_layer_names()
-        uid = self.get_keyboard_uid()
-        if uid not in names:
-            names[uid] = {}
-        names[uid][str(idx)] = name
-        save_layer_names(names)
-
-    def rename_layer(self, idx):
-        current = self.get_layer_name(idx)
-        new_name, ok = QInputDialog.getText(
-            self, tr("KeymapEditor", "Rename Layer"),
-            tr("KeymapEditor", "Layer {} name:").format(idx),
-            text=current
-        )
-        if ok and new_name.strip() != "":
-            self.set_layer_name(idx, new_name.strip())
-        elif ok:
-            # Empty → reset to default (number)
-            names = load_layer_names()
-            uid = self.get_keyboard_uid()
-            if uid in names and str(idx) in names[uid]:
-                del names[uid][str(idx)]
-                save_layer_names(names)
-        self.rebuild_layers()
-
     def rebuild_layers(self):
         # delete old layer labels
         for label in self.layer_buttons:
@@ -153,15 +98,11 @@ class KeymapEditor(BasicEditor):
 
         # create new layer labels
         for x in range(self.keyboard.layers):
-            label = self.get_layer_name(x)
-            btn = SquareButton(label)
+            btn = SquareButton(str(x))
             btn.setFocusPolicy(Qt.NoFocus)
             btn.setRelSize(1.667)
             btn.setCheckable(True)
             btn.clicked.connect(lambda state, idx=x: self.switch_layer(idx))
-            btn.setToolTip(tr("KeymapEditor", "Double-click to rename"))
-            # Double-click to rename
-            btn.mouseDoubleClickEvent = lambda event, idx=x: self.rename_layer(idx)
             self.layout_layers.addWidget(btn)
             self.layer_buttons.append(btn)
         for x in range(0,2):
