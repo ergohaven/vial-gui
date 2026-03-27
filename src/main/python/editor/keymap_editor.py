@@ -164,7 +164,8 @@ class KeymapEditor(BasicEditor):
             btn.setCheckable(True)
             btn.clicked.connect(lambda state, idx=x: self.switch_layer(idx))
             btn.setToolTip(tr("KeymapEditor", "Double-click to rename"))
-            btn.double_clicked.connect(lambda idx=x: self.rename_layer(idx))
+            # Double-click to rename
+            btn.mouseDoubleClickEvent = lambda event, idx=x: self.rename_layer(idx)
             self.layout_layers.addWidget(btn)
             self.layer_buttons.append(btn)
         for x in range(0,2):

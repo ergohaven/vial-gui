@@ -1,18 +1,12 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-from PyQt5.QtCore import QSize, Qt, pyqtSignal
+from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QPushButton, QLabel, QHBoxLayout
 
 class SquareButton(QPushButton):
 
-    double_clicked = pyqtSignal()
-
     def __init__(self, parent=None):
         super().__init__(parent)
-
-    def mouseDoubleClickEvent(self, event):
-        self.double_clicked.emit()
-        super().mouseDoubleClickEvent(event)
 
         self.scale = 1.2
         self.label = None
