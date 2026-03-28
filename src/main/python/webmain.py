@@ -58,9 +58,23 @@ def web_get_resource(name):
 
 
 def main(app):
-    font = app.font()
-    font.setPointSize(10)
-    app.setFont(font)
+    from PyQt5.QtGui import QFontDatabase, QFont
+    # Load embedded font to avoid Qt wasm glyph misrendering (e.g. 'U' rendered as 'J')
+    font_id = QFontDatabase.addApplicationFont("/usr/local/fonts/DejaVuSans.ttf")
+    if font_id >= 0:
+        families = QFontDatabase.applicationFontFamilies(font_id)
+        if families:
+            font = QFont(families[0])
+            font.setPointSize(10)
+            app.setFont(font)
+        else:
+            font = app.font()
+            font.setPointSize(10)
+            app.setFont(font)
+    else:
+        font = app.font()
+        font.setPointSize(10)
+        app.setFont(font)
 
     app.get_resource = web_get_resource
     with open(app.get_resource("build_settings.json"), "r") as inf:
